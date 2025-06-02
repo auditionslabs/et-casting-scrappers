@@ -1,0 +1,180 @@
+import { chromium } from 'playwright'
+import { z } from 'zod'
+import LLMScraper from 'llm-scraper'
+import logger from '../../config/logger.js'
+import { CategoryEnum, MappedJob, ScrapedJob } from '../../types/casting.js'
+import { generateObject } from 'ai'
+import { createCDLog } from '../../helpers/createCDLog.js'
+import { addRoles } from '../../helpers/addRoles.js'
+import { addProjectToExploreTalent } from '../../helpers/addProjectToET.js'
+import { addProjectApps } from '../../helpers/addProjectApps.js'
+import { rate_des } from '../../types/casting.js'
+import { llm } from '../../config/llm.js'
+
+
+export type Listing =  {
+    title: string,
+    location: string,
+    type: string,
+    skills: string,
+    company_name: string,
+    body_type?: string,
+    gender?: string,
+    age?: string,
+    height?: string,
+    weight?: string,
+    ethnicity?: string,
+    union_job: boolean,
+    rate: number,
+    expiration_date: string,
+    category: string,
+    compensation: string,
+    date_posted: string,
+    description: string,
+    job_url: string,
+    project_quality: number,
+    rate_des: string,
+
+}
+type ScrapedListing = {
+    results: Listing[]
+}
+
+function getDomain(url: string): string | null {
+    const regex = /^(?:https?:\/\/)?(?:www\.)?([^\/:?#]+)/i;
+    const match = url.match(regex);
+    return match ? match[1] : null;
+  }
+
+async function mapJobToDatabase (listing: Listing & {updated_title: string, updated_description: string}, user: {id: number, email: string}) {
+    // console.log(JSON.stringify(listing, null, 2))
+    const currentTime = Math.floor(Date.now() / 1000);
+
+    const mapped: MappedJob = {
+
+        name: listing.updated_title,
+        name_original: listing.title,
+        project: listing.updated_title,
+        address2: listing.job_url,
+        location: listing.location,
+        cat: CategoryEnum[listing.category] || 0,
+        rate: listing.rate || 262,
+        rate_des: rate_des[listing.rate_des] || 0,
+        qlty_level: listing.project_quality,
+        des: listing.updated_description,
+        union2: listing.union_job ? 1 : 0,
+        sub_timestamp: currentTime.toString(),
+        date_created: currentTime.toString(),
+        last_modified: currentTime.toString(),
+        status: 1,
+        asap: (Math.floor(new Date(listing.expiration_date).getTime() / 1000)).toString(),
+        source: getDomain(listing.job_url) || listing.job_url,
+        required_phone: '0',
+        required_photo: '0',
+        expected_time: '0',
+        paid: 1,
+        notify_through: '0',
+        user_id: user.id,
+        snr: 1,
+        snr_email: user.email,
+        market: listing.location,
+        // production: process.env.TRM_STAFF_USER_ID + '-' + currentTime.toString(),
+    }
+    return mapped
+}
+
+export async function scrapeListing(listing: ScrapedJob, user: {id: number, email: string}) {
+    let browser = null;
+    let page = null;
+    try {
+        browser = await chromium.launch();
+        page = await browser.newPage();
+        await page.goto(listing.job_url);
+        logger.info('Page loaded')
+
+        // Create a new LLMScraper
+        const scraper = new LLMScraper(llm);
+
+        const categoryKeys = Object.keys(CategoryEnum).filter(key => key !== '') as [keyof typeof CategoryEnum, ...(keyof typeof CategoryEnum)[]];
+        const rate_des_keys = Object.keys(rate_des).filter(key => key !== 'n/a') as [keyof typeof rate_des, ...(keyof typeof rate_des)[]];
+
+        // Define schema to extract contents into
+        const schema = z.object({
+            results: z.array(
+                z.object({
+                    title: z.string(),
+                    location: z.string() || 'N/A',
+                    type: z.string(),
+                    skills: z.string(),
+                    company_name: z.string(),
+                    body_type: z.optional(z.string()),
+                    gender: z.optional(z.string()),
+                    age: z.optional(z.string()),
+                    height: z.optional(z.string()),
+                    weight: z.optional(z.string()),
+                    ethnicity: z.optional(z.string()),
+                    union_job: z.boolean(),
+                    rate: z.number(),
+                    expiration_date: z.string(),
+                    category: z.enum(categoryKeys),
+                    compensation: z.enum(['Paid', 'Unpaid']),
+                    date_posted: z.string(),
+                    description: z.array(z.string()),
+                    rate_des: z.enum(rate_des_keys),
+                }))
+                .length(1)
+                .describe('Detail all the information about the current listing. Do not wrap any text overflow in elipses or other symbols. If the location is not specified or is United States/Nation Wide, location=N/A. If you do not f'),
+        });
+
+        logger.info('Running Scraper')
+        const { data } = await scraper.run(page, schema, { format: 'html', maxTokens: 10000 }) as unknown as { data: ScrapedListing }
+        logger.info("Scraper Result:\n" + JSON.stringify(data))
+
+        const job = data.results[0]
+        const { object } = await generateObject({
+            model: llm,
+            schema: z.object({
+                description: z.string(),
+                project_quality: z.number(),
+                title: z.string(),
+            }),
+            prompt: `Detail all the information about the current listing. Do not wrap any text overflow in elipses or other symbols. remove the word open from the title, remove generalized location from the description, remove rate from description, remove contact info, remove the roles needed from the description. Remove the role requirements from the description. Make sure the description is SEO friendly.
+            
+            Rate the quality of the project on a scale of 4-6. 6 has the best actors, pays well. 4 has average actors, pays average. 5 is somewhere in between. 
+            Make sure the title is SEO friendly and is not too long.
+            
+            Listing: ${JSON.stringify(listing)}`,
+        })
+        const { description, project_quality, title } = object
+
+        const updatedJob = {
+            ...job,
+            title: job.title,
+            updated_title: title,  
+            project_quality: project_quality,
+            job_url: listing.job_url,
+            updated_description: description,
+            description: listing.job_description.join("\n")
+        }
+        await createCDLog(user.id, `Scraped listing ${JSON.stringify(updatedJob)}`)
+        
+        const mappedJob = await mapJobToDatabase(updatedJob as Listing & {updated_title: string, updated_description: string}, user)
+        const response = await addProjectToExploreTalent(mappedJob as MappedJob)
+        
+
+        logger.info("Adding Roles to db.")
+        await addRoles(updatedJob as Listing)
+
+        logger.info("Adding Project Apps to db.")
+        await addProjectApps(updatedJob as Listing)
+        return response
+
+    } catch (error) {
+        logger.error('Error during scraping:', error)
+        throw error
+    } finally {
+        if (page) await page.close()
+        if (browser) await browser.close()
+        logger.info("Browser Closed")
+    }
+} 

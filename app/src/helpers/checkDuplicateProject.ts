@@ -4,7 +4,7 @@
 import { db } from '../config/database.js'
 import logger from '../config/logger.js'
 
-export async function searchDuplicateProject(project_title: string) {
+export async function searchDuplicateProject(project_title: string, project_url: string) {
     /**
      * Search for a duplicate project in the database.
      * @param project_title - The project title to search for.
@@ -14,18 +14,19 @@ export async function searchDuplicateProject(project_title: string) {
     try {
         const query = db.selectFrom('castings').selectAll()
         .where((eb) => eb.or([
-            eb('name', '=', project_title),
-            eb('name', 'like', `%${project_title}%`)
+            eb('name_original', '=', `"${project_title}"`),
+            eb('name_original', 'like', `"%${project_title}%"`),
+            eb('address2', '=', project_url),
+            eb('address2', 'like', `"%${project_url}%"`)
           ]))
         .orderBy('date_created', 'desc')
         
-        const projects = await query.executeTakeFirst()
-        if (projects) {
+        const projects = await query.execute()
+        if (projects.length > 0) {
             return true;
         } else {
             return false;
         }
-
 
     } catch (error) {
         logger.error('Error searching duplicate project:', error)

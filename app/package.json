@@ -6,6 +6,7 @@
     "dotenv": "^16.5.0",
     "kysely": "^0.28.2",
     "llm-scraper": "^1.6.0",
+    "moment-timezone": "^0.6.0",
     "mysql2": "^3.14.1",
     "playwright": "^1.52.0",
     "ts-node": "^10.9.2",
@@ -14,7 +15,13 @@
     "zod": "^3.25.21"
   },
   "scripts": {
-    "start:project_casting": "node dist/app/project_casting.js"
+    "build": "tsc",
+    "build:project_casting": "tsc -p ./build/tsconfig.project_castings.json",
+    "start:project_casting": "node dist/app/project_casting/index.js",
+    "dev:project_casting": "ts-node --esm src/app/project_casting/index.ts",
+    "build:auditions_free": "tsc -p ./build/tsconfig.auditions_free.json",
+    "start:auditions_free": "node dist/app/auditions_free/index.js",
+    "dev:auditions_free": "ts-node --esm src/app/auditions_free/index.ts"
   },
   "type": "module",
   "devDependencies": {

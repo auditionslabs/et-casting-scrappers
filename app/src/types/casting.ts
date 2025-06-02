@@ -45,69 +45,69 @@
 //   }
 
 //   getCategory(): string {
-    // let categories = {
-    //   0: '',
-    //   1: 'Commercials',
-    //   10: 'Feature Film - Non-SAG',
-    //   11: 'Feature Film - Student Films',
-    //   12: 'Feature Film - Short Film',
-    //   13: 'Feature Film - Documentaries',
-    //   14: 'Feature Film - Inde/Low Budget',
-    //   15: 'Infomercials',
-    //   16: 'Crew - Assistants & Entry Level',
-    //   17: 'Industrial/Training Films',
-    //   18: 'Modeling - Runway',
-    //   19: 'Modeling - Hair/Cosmetics',
-    //   20: 'Modeling - Print',
-    //   21: 'Music Videos',
-    //   22: 'Theatre - Equity (Union)',
-    //   23: 'Theatre - Non-Equity',
-    //   24: 'Trade Shows/Live Events/Promo Model',
-    //   25: 'Crew - Marketing/PR',
-    //   26: 'Voice Over',
-    //   27: 'Internet',
-    //   28: 'Music - Vocals',
-    //   29: 'Music - Strings',
-    //   3: 'Dance - Ballet/Classic',
-    //   30: 'Music - Horns',
-    //   31: 'Music - Keyboards',
-    //   32: 'Music - Drums',
-    //   33: 'Music - Other',
-    //   34: 'Crew - Ligthing/Sound',
-    //   35: 'Crew - Camera/Editor',
-    //   36: 'Crew - Producer/Director',
-    //   37: 'Crew - Make Up/Stylist',
-    //   38: 'Crew - Other',
-    //   39: 'Crew - Writing/Script/Edit',
-    //   4: 'Dance - Modern/Jazz',
-    //   40: 'Crew - Showbiz Internship',
-    //   41: 'Acting - Comedy/Clown',
-    //   42: 'Variety - Variety Acts',
-    //   43: 'Acting - Acrobatics/Stunts',
-    //   44: 'Music - Band',
-    //   45: 'Music - DJ/Sound',
-    //   46: 'Music - Teacher',
-    //   47: 'Crew - TV/Radio',
-    //   48: 'Crew - Graphic/Web/Animate',
-    //   49: 'Crew - Accounting/Payroll/HR',
-    //   5: 'Episodic TV - Pilots',
-    //   50: 'Crew - Technology/MIS',
-    //   51: 'Crew - Management',
-    //   52: 'Crew - Talent/Casting Mgmt',
-    //   53: 'Dance - HipHop',
-    //   54: 'Dance - Club/Gogo',
-    //   55: 'Dance - Traditonal/Latin',
-    //   56: 'Dance - Choreography',
-    //   57: 'Dance - Teacher',
-    //   58: 'Dance - Other/General',
-    //   59: 'Reality TV',
-    //   6: 'Episodic TV - SAG',
-    //   60: 'Extras',
-    //   61: 'Acting - Other',
-    //   7: 'Episodic TV - AFTRA',
-    //   8: 'Episodic TV - Non-Union',
-    //   9: 'Feature Film - SAG'
-    // }
+// let categories = {
+//   0: '',
+//   1: 'Commercials',
+//   10: 'Feature Film - Non-SAG',
+//   11: 'Feature Film - Student Films',
+//   12: 'Feature Film - Short Film',
+//   13: 'Feature Film - Documentaries',
+//   14: 'Feature Film - Inde/Low Budget',
+//   15: 'Infomercials',
+//   16: 'Crew - Assistants & Entry Level',
+//   17: 'Industrial/Training Films',
+//   18: 'Modeling - Runway',
+//   19: 'Modeling - Hair/Cosmetics',
+//   20: 'Modeling - Print',
+//   21: 'Music Videos',
+//   22: 'Theatre - Equity (Union)',
+//   23: 'Theatre - Non-Equity',
+//   24: 'Trade Shows/Live Events/Promo Model',
+//   25: 'Crew - Marketing/PR',
+//   26: 'Voice Over',
+//   27: 'Internet',
+//   28: 'Music - Vocals',
+//   29: 'Music - Strings',
+//   3: 'Dance - Ballet/Classic',
+//   30: 'Music - Horns',
+//   31: 'Music - Keyboards',
+//   32: 'Music - Drums',
+//   33: 'Music - Other',
+//   34: 'Crew - Ligthing/Sound',
+//   35: 'Crew - Camera/Editor',
+//   36: 'Crew - Producer/Director',
+//   37: 'Crew - Make Up/Stylist',
+//   38: 'Crew - Other',
+//   39: 'Crew - Writing/Script/Edit',
+//   4: 'Dance - Modern/Jazz',
+//   40: 'Crew - Showbiz Internship',
+//   41: 'Acting - Comedy/Clown',
+//   42: 'Variety - Variety Acts',
+//   43: 'Acting - Acrobatics/Stunts',
+//   44: 'Music - Band',
+//   45: 'Music - DJ/Sound',
+//   46: 'Music - Teacher',
+//   47: 'Crew - TV/Radio',
+//   48: 'Crew - Graphic/Web/Animate',
+//   49: 'Crew - Accounting/Payroll/HR',
+//   5: 'Episodic TV - Pilots',
+//   50: 'Crew - Technology/MIS',
+//   51: 'Crew - Management',
+//   52: 'Crew - Talent/Casting Mgmt',
+//   53: 'Dance - HipHop',
+//   54: 'Dance - Club/Gogo',
+//   55: 'Dance - Traditonal/Latin',
+//   56: 'Dance - Choreography',
+//   57: 'Dance - Teacher',
+//   58: 'Dance - Other/General',
+//   59: 'Reality TV',
+//   6: 'Episodic TV - SAG',
+//   60: 'Extras',
+//   61: 'Acting - Other',
+//   7: 'Episodic TV - AFTRA',
+//   8: 'Episodic TV - Non-Union',
+//   9: 'Feature Film - SAG'
+// }
 
 //     return categories[this.cat]
 //   }
@@ -187,66 +187,129 @@
 // }
 
 type RateType = 'N/A' | 'Per Event' | 'Per Hour' | 'Per Day' | 'Per Week' | 'Per Month' | 'Negotiable';
-enum CategoryEnum {
-  '' = 0,
-  'Commercials' = 1,
-  'Feature Film - Non-SAG' = 10,
-  'Feature Film - Student Films' = 11,
-  'Feature Film - Short Film' = 12,
-  'Feature Film - Documentaries' = 13,
-  'Feature Film - Inde/Low Budget' = 14,
-  'Infomercials' = 15,
-  'Crew - Assistants & Entry Level' = 16,
-  'Industrial/Training Films' = 17,
-  'Modeling - Runway' = 18,
-  'Modeling - Hair/Cosmetics' = 19,
-  'Modeling - Print' = 20,
-  'Music Videos' = 21,
-  'Theatre - Equity (Union)' = 22,
-  'Theatre - Non-Equity' = 23,
-  'Trade Shows/Live Events/Promo Model' = 24,
-  'Crew - Marketing/PR' = 25,
-  'Voice Over' = 26,
-  'Internet' = 27,
-  'Music - Vocals' = 28,
-  'Music - Strings' = 29,
-  'Dance - Ballet/Classic' = 3,
-  'Dance - Modern/Jazz' = 4,
-  'Dance - HipHop' = 53,
-  'Dance - Club/Gogo' = 54,
-  'Dance - Traditonal/Latin' = 55,
-  'Dance - Choreography' = 56,
-  'Dance - Teacher' = 57,
-  'Dance - Other/General' = 58,
-  'Reality TV' = 59,
-  'Acting - Comedy/Clown' = 41,
-  'Variety - Variety Acts' = 42,
-  'Acting - Acrobatics/Stunts' = 43,
-  'Music - Band' = 44,
-  'Music - DJ/Sound' = 45,
-  'Music - Teacher' = 46,
-  'Crew - TV/Radio' = 47,
-  'Crew - Graphic/Web/Animate' = 48,
-  'Crew - Accounting/Payroll/HR' = 49,
-  'Crew - Technology/MIS' = 50,
-  'Crew - Management' = 51,
-  'Crew - Talent/Casting Mgmt' = 52,
-  'Acting - Other' = 61,
-  'Acting - SAG' = 6,
-  'Acting - AFTRA' = 7,
-  'Acting - Non-Union' = 8,
-  'Feature Film - SAG' = 9,
-  'Extras' = 60,
-  'Crew - Other' = 38,
-  'Crew - Writing/Script/Edit' = 39,
-  'Crew - Make Up/Stylist' = 37,
-  'Crew - Producer/Director' = 36,
-  'Crew - Camera/Editor' = 35,
-  'Crew - Ligthing/Sound' = 34,
-  'Crew - Showbiz Internship' = 40,
+export const CategoryEnum: Record<string, number> = {
+    'Commercials' : 1,
+    'Feature Film - Non-SAG' : 10,
+    'Feature Film - Student Films' : 11,
+    'Feature Film - Short Film' : 12,
+    'Feature Film - Documentaries' : 13,
+    'Feature Film - Inde/Low Budget' : 14,
+    'Infomercials' : 15,
+    'Crew - Assistants & Entry Level' : 16,
+    'Industrial/Training Films' : 17,
+    'Modeling - Runway' : 18,
+    'Modeling - Hair/Cosmetics' : 19,
+    'Modeling - Print' : 20,
+    'Music Videos' : 21,
+    'Theatre - Equity (Union)' : 22,
+    'Theatre - Non-Equity' : 23,
+    'Trade Shows/Live Events/Promo Model' : 24,
+    'Crew - Marketing/PR' : 25,
+    'Voice Over' : 26,
+    'Internet' : 27,
+    'Music - Vocals' : 28,
+    'Music - Strings' : 29,
+    'Dance - Ballet/Classic' : 3,
+    'Music - Horns' : 30,
+    'Music - Keyboards' : 31,
+    'Music - Drums' : 32,
+    'Music - Other' : 33,
+    'Crew - Ligthing/Sound' : 34,
+    'Crew - Camera/Editor' : 35,
+    'Crew - Producer/Director' : 36,
+    'Crew - Make Up/Stylist' : 37,
+    'Crew - Other' : 38,
+    'Crew - Writing/Script/Edit' : 39,
+    'Dance - Modern/Jazz' : 4,
+    'Crew - Showbiz Internship' : 40,
+    'Acting - Comedy/Clown' : 41,
+    'Variety - Variety Acts' : 42,
+    'Acting - Acrobatics/Stunts' : 43,
+    'Music - Band' : 44,
+    'Music - DJ/Sound' : 45,
+    'Music - Teacher' : 46,
+    'Crew - TV/Radio' : 47,
+    'Crew - Graphic/Web/Animate' : 48,
+    'Crew - Accounting/Payroll/HR' : 49,
+    'Episodic TV - Pilots' : 5,
+    'Crew - Technology/MIS' : 50,
+    'Crew - Management' : 51,
+    'Crew - Talent/Casting Mgmt' : 52,
+    'Dance - HipHop' : 53,
+    'Dance - Club/Gogo' : 54,
+    'Dance - Traditonal/Latin' : 55,
+    'Dance - Choreography' : 56,
+    'Dance - Teacher' : 57,
+    'Dance - Other/General' : 58,
+    'Reality TV' : 59,
+    'Episodic TV - SAG' : 6,
+    'Extras' : 60,
+    'Acting - Other' : 61,
+    'Episodic TV - AFTRA' : 7,
+    'Episodic TV - Non-Union' : 8,
+    'Feature Film - SAG' : 9,
 }
 
-// interface CastingProject {
-//   rates: RateType;
-// }
+export type ScrapedJob = {
+    production_type: string;
+    title: string;
+    location: string;
+    job_type: string;
+    skills: string;
+    company_name: string;
+    job_url: string;
+    date_posted: string;
+    job_description: string[];
+    union_job: boolean;
+    compensation: 'Paid' | 'Unpaid';
+    rate?: number;
+}
 
+export type MappedJob = {
+    name: string;
+    name_original: string;
+    project: string;
+    address2: string;
+    location: string;
+    market: string;
+    cat: number;
+    rate_des: number;
+    rate: number;
+    des: string;
+    union2: number;
+    sub_timestamp: string;
+    date_created: string;
+    last_modified: string;
+    status: number;
+    source: string;
+    required_phone: string;
+    required_photo: string;
+    expected_time: string;
+    paid: number;
+    notify_through: string;
+    snr: number;
+
+    [key: string]: string | number;
+}
+
+export type CDUser = {
+    id: number;
+    email: string;
+}
+
+
+export const rate_des: Record<string, number> = {
+    'n/a': 0,
+    'event': 1,
+    'hour': 2,
+    'day': 3,
+    'week': 4,
+    'month': 5,
+    'negotiable': 6,
+}
+
+
+export const snr_type: Record<string, number> = {
+  'Self Response': 1,
+  'Open Call': 2,
+}

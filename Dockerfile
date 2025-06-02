@@ -28,7 +28,7 @@ WORKDIR /app
 ADD ./app /app
 
 # Install npm dependencies
-RUN npm install
+RUN npm install chromium
 
 # Install Playwright and its browser dependencies
 RUN npx playwright install --with-deps
