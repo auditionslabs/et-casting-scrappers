@@ -27,9 +27,9 @@ export async function mapJobToDatabase(listing: Listing, user: {id: number, emai
             rate_des: 6,
             des: listing.description,
             union2: listing.union_job ? 1 : 0,
-            sub_timestamp: currentTime.toString(),
-            date_created: currentTime.toString(),
-            last_modified: currentTime.toString(),
+            sub_timestamp: currentTime,
+            date_created: currentTime,
+            last_modified: currentTime,
             status: 1,
             source: getDomain(listing.job_url) || listing.job_url,
             required_phone: '0',
@@ -39,7 +39,7 @@ export async function mapJobToDatabase(listing: Listing, user: {id: number, emai
             notify_through: '0',
             snr: user.id,
             snr_email: user.email,
-            asap: parseDateToTimestamp(listing.expiration_date).toString(),
+            asap: parseDateToTimestamp(listing.expiration_date),
         };
         
         return returnData;

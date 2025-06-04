@@ -1,6 +1,8 @@
 import winston from 'winston';
 import moment from 'moment-timezone';
 
+const currentDate = moment().tz('America/Los_Angeles').format('MM-DD-YY');
+
 const logger = winston.createLogger({
     level: "info",
     format: winston.format.combine(
@@ -10,8 +12,8 @@ const logger = winston.createLogger({
         winston.format.json()
     ),
     transports: [
-        new winston.transports.File({ filename: "logs/error.log", level: "warn" }),
-        new winston.transports.File({ filename: "logs/app.log" }),
+        new winston.transports.File({ filename: `logs/error-${currentDate}.log`, level: "warn" }),
+        new winston.transports.File({ filename: `logs/app-${currentDate}.log` }),
     ],
     
 }); 

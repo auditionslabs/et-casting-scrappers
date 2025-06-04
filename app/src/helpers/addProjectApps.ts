@@ -6,24 +6,24 @@ import { Listing } from '../app/project_casting/scrape_listings.js'
 import { formatDateToMySQL } from '../utils/dateUtils.js'
 
 
-export async function addProjectApps(listing: Listing) {
+export async function addProjectApps(title:string, job_url:string) {
     try {
         const query = db.selectFrom('castings')
             .selectAll()
-            .where('address2', 'like', `%${listing.job_url}%`)
+            .where('address2', 'like', `%${job_url}%`)
             .where(eb => 
                 eb.or([
-                    eb('name', '=', listing.title),
-                    eb('name', 'like', `%${listing.title}%`),
-                    eb('address2', '=', listing.job_url),
-                    eb('address2', 'like', `%${listing.job_url}%`)
+                    eb('name', '=', title),
+                    eb('name', 'like', `%${title}%`),
+                    eb('address2', '=', job_url),
+                    eb('address2', 'like', `%${job_url}%`)
                 ])
             )
             .orderBy('date_created', 'desc');
         // console.log("Query: ", query.compile())
         const casting = await query.execute();
     if (casting.length === 0) {
-        logger.error('Casting not found:', listing.title, listing.job_url);
+        logger.error('Casting not found:', title, job_url);
         return;
     }
     const currentDate = formatDateToMySQL(new Date());

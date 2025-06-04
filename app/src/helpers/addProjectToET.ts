@@ -2,7 +2,7 @@ import { MappedJob } from "@/types/casting";
 import logger from "../config/logger.js";
 
 
-export async function addProjectToExploreTalent(mappedJob: MappedJob) {
+export async function addProjectToET(mappedJob: MappedJob) {
 	try {
 		const headers = {
 			"accept": "*/*",

@@ -10,3 +10,7 @@ app/.env.development
 app/.env.test
 app/logs
 app/logs/*
+
+.idea/
+.vscode/
+

@@ -34,7 +34,7 @@ let browser: any = null
 
 async function startScraper() {
 	try {
-		for (let i = 1; i <= 1; i++) {
+		for (let i = 4; i <= 6; i++) {
 
 			logger.info('Starting Auditions Free Scraper')
 			dotenv.config()
@@ -68,8 +68,8 @@ async function startScraper() {
 
 			const { data } = (await scraper.run(page, schema, { format: 'html', maxTokens: 20000 })) as unknown as { data: ScraperResult };
 
-			console.log(JSON.stringify(data, null, 2))
-			// logger.info("Scraper Result:\n" + JSON.stringify(data))
+			// console.log(JSON.stringify(data, null, 2))
+			logger.info("Scraper Result:\n" + JSON.stringify(data))
 
 			// Show the result from LLM
 
@@ -80,8 +80,9 @@ async function startScraper() {
             for (const job of data.results) {
                 const duplicate = await searchDuplicateProject(job.title, job.job_url)
                 if (!duplicate) {
-                    console.log(job)
-                    const scrapedAndMappedJob = await scrapeListing(job.job_url)
+                    // console.log(job)
+                    await scrapeListing(job.job_url)
+					// process.exit(0)
                 }
             }
 			// for (const job of data.results) {

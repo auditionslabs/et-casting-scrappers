@@ -11,21 +11,21 @@ type llmResponse = {
     results: Role[]
 }
 
-export async function addRoles(listing: Listing) {
-    
+export async function addRoles(title: string, description: string, job_url: string) {
+
 
     logger.info("in add roles.")
 
-   const query = db.selectFrom('castings').selectAll().where('address2', '=', listing.job_url);
-//    console.log(query.compile());
-   const casting = await query.executeTakeFirst();
-   logger.info("Casting: ", JSON.stringify(casting) );
+    const query = db.selectFrom('castings').selectAll().where('address2', '=', job_url);
+    //    console.log(query.compile());
+    const casting = await query.executeTakeFirst();
+    logger.info("Casting: ", JSON.stringify(casting));
 
-   if (!casting) {
-    logger.error('Casting not found:', listing.title, listing.job_url);
-    return;
-   }
-   const casting_id = casting.casting_id;
+    if (!casting) {
+        logger.error('Casting not found:', title, job_url);
+        return;
+    }
+    const casting_id = casting.casting_id;
 
 
     const schema = z.object({
@@ -72,57 +72,62 @@ export async function addRoles(listing: Listing) {
             hair_salt_paper: z.number().optional(),
             hair_white: z.number().optional(),
         }))
-    }) 
-    
+    })
+
     const object = await generateObject({
         model: llm,
-        schema:schema,
+        schema: schema,
         prompt: `
-        You are a casting director. You are given a listing of a job. You need to create roles for the job.
-        Each role should contain the information for a particular person needed for the job. Males and females should be listed separately. Babies and children should be listed separately. For feature films add the roles for supporting and extras if there is no age specified use 1-80 as the age range. If there is no expiration date specified use 30 days from the date of the job posting. Height should be in inches.
-        ${JSON.stringify(listing)}
+        You are a casting director. You are given the listing of a job. You need to create roles for the job.
+        Each role should contain the information for a particular person needed for the job. Males and females should be listed separately. Babies and children should be listed separately. For feature films add the roles for supporting and extras if there is no age specified use 1-80 as the age range. If there is no expiration date specified use 30 days from the date of the job posting. Height should be in inches. Create all the roles for the job from the listing details. use the original description of the job to create the roles. If there is no expiration date provided, use 30 days from today's date.
+        Title: ${title}
+        Description: ${description}
+        Today's date is: ${new Date().toISOString()}
         `,
     });
     const llmResponse = object.object as llmResponse;
 
     // console.log(JSON.stringify(object, null, 2))
-    const roles = llmResponse.results as Role[]; 
-    const body = new URLSearchParams();
+    const roles = llmResponse.results as Role[];
+
     for (const role of roles) {
+        const body = new URLSearchParams();
         for (const key in role) {
             const value = role[key as keyof Role];
             if (value !== undefined) {
                 body.append(key, value.toString());
             }
         }
-    }
-    body.append('casting_id', casting_id.toString());
-    // console.log("BODY: ", body.toString())
 
-    try {
-        const response = await fetch("https://api.exploretalent.com/v1/admin/jobs", {
-            method: 'POST',
-            body: body.toString(),
-            headers: {
-                "accept": "*/*",
-                "accept-language": "en-IN,en;q=0.5",
-                "authorization": `Bearer ${process.env.EXPLORE_TALENT_API_KEY}`,
-                "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-                "sec-ch-ua": "\"Chromium\";v=\"136\", \"Brave\";v=\"136\", \"Not.A/Brand\";v=\"99\"",
-                "sec-ch-ua-mobile": "?0",
-                "sec-ch-ua-platform": "\"Windows\"",
-                "sec-fetch-dest": "empty",
-                "sec-fetch-mode": "cors",
-                "sec-fetch-site": "same-site",
-                "sec-gpc": "1",
-                "Referer": "https://trm.exploretalent.com/",
-                "Referrer-Policy": "strict-origin-when-cross-origin"
-            },
-        });
-        if (!response.ok) {
-            logger.error('Error adding roles:', JSON.stringify(response));
+        body.append('casting_id', casting_id.toString());
+        // console.log("BODY: ", body.toString())
+
+        try {
+            const response = await fetch("https://api.exploretalent.com/v1/admin/jobs", {
+                method: 'POST',
+                body: body.toString(),
+                headers: {
+                    "accept": "*/*",
+                    "accept-language": "en-IN,en;q=0.5",
+                    "authorization": `Bearer ${process.env.EXPLORE_TALENT_API_KEY}`,
+                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "sec-ch-ua": "\"Chromium\";v=\"136\", \"Brave\";v=\"136\", \"Not.A/Brand\";v=\"99\"",
+                    "sec-ch-ua-mobile": "?0",
+                    "sec-ch-ua-platform": "\"Windows\"",
+                    "sec-fetch-dest": "empty",
+                    "sec-fetch-mode": "cors",
+                    "sec-fetch-site": "same-site",
+                    "sec-gpc": "1",
+                    "Referer": "https://trm.exploretalent.com/",
+                    "Referrer-Policy": "strict-origin-when-cross-origin"
+                },
+            });
+            if (!response.ok) {
+                logger.error('Error adding roles:', JSON.stringify(response));
+            }
+
+        } catch (error) {
+            logger.error('Error adding roles:', error)
         }
-    } catch (error) {
-        logger.error('Error adding roles:', error)
     }
 }

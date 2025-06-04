@@ -30,7 +30,7 @@ let browser: any = null
 
 async function startScraper() {
 	try {
-		for (let i = 71; i <= 80; i++) {
+		for (let i = 1; i <= 10; i++) {
 
 			logger.info('Starting Project Casting Scraper')
 			dotenv.config()

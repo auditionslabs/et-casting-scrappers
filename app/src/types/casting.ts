@@ -277,9 +277,9 @@ export type MappedJob = {
     rate: number;
     des: string;
     union2: number;
-    sub_timestamp: string;
-    date_created: string;
-    last_modified: string;
+    sub_timestamp: number;
+    date_created: number;
+    last_modified: number;
     status: number;
     source: string;
     required_phone: string;
@@ -298,7 +298,7 @@ export type CDUser = {
 }
 
 
-export const rate_des: Record<string, number> = {
+export const rateDescription: Record<string, number> = {
     'n/a': 0,
     'event': 1,
     'hour': 2,
