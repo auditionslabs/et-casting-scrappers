@@ -7,7 +7,7 @@ import { getFutureDate, parseDateToTimestamp, getCurrentTimestamp } from '../uti
 import { CDUser, rateDescription, snr_type, CategoryEnum, MappedJob } from '../types/casting.js'
 import { searchCD } from '../helpers/searchCD.js'
 import { generateObject } from 'ai'
-import { getUpadtedNameAndDescription, type UpdatedNameDescriptionProjectQuality } from '../helpers/getUpdatedNameDescriptionProjectQuality.js'
+import { getUpdatedNameAndDescription, type UpdatedNameDescriptionProjectQuality } from '../helpers/getUpdatedNameDescriptionProjectQuality.js'
 import { searchDuplicateProject } from '../helpers/checkDuplicateProject.js'
 import dotenv from 'dotenv'
 import { createCDLog } from '../helpers/createCDLog.js'
@@ -49,7 +49,7 @@ async function updateProjectQuality() {
                     await page.goto(casting.address2);
                     const { data } = (await scraper.run(page, schema, { format: 'html' })) as unknown as { data: ScraperResult };
                     console.log(data);
-                    const updatedNameDescriptionProjectQuality = await getUpadtedNameAndDescription(data.original_name,data.description);
+                    const updatedNameDescriptionProjectQuality = await getUpdatedNameAndDescription(data.original_name,data.description);
                     logger.info(`Updated name and description: ${JSON.stringify(updatedNameDescriptionProjectQuality)}`);
                     const updateQuery = db.updateTable('castings').set({
                         qlty_level: Math.round(updatedNameDescriptionProjectQuality.project_quality),

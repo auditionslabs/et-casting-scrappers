@@ -8,7 +8,7 @@ export type UpdatedNameDescriptionProjectQuality = {
     project_quality: number,
 }
 
-export async function getUpadtedNameAndDescription(original_name: string, description: string[]): Promise<UpdatedNameDescriptionProjectQuality> {
+export async function getUpdatedNameAndDescription(original_name: string, description: string[]): Promise<UpdatedNameDescriptionProjectQuality> {
     const { object } = await generateObject({
         model: llm,
         schema: z.object({

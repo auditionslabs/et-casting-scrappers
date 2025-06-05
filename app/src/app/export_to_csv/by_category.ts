@@ -1,4 +1,4 @@
-// export a categotycal excel file where each category has a sheet and the sheet contains the top 100 jobs for that category based on the project quality, rate and the expiration date.
+// export a categorical excel file where each category has a sheet and the sheet contains the top 100 jobs for that category based on the project quality, rate and the expiration date.
 
 
 import { getCurrentTimestamp } from '../../utils/dateUtils.js';

@@ -7,7 +7,7 @@ import { getFutureDate, parseDateToTimestamp, getCurrentTimestamp } from '../../
 import { CDUser, rateDescription, snr_type, CategoryEnum, MappedJob } from '../../types/casting.js'
 import { searchCD } from '../../helpers/searchCD.js'
 import { generateObject } from 'ai'
-import { getUpadtedNameAndDescription, type UpdatedNameDescriptionProjectQuality } from '../../helpers/getUpdatedNameDescriptionProjectQuality.js'
+import { getUpdatedNameAndDescription, type UpdatedNameDescriptionProjectQuality } from '../../helpers/getUpdatedNameDescriptionProjectQuality.js'
 import { searchDuplicateProject } from '../../helpers/checkDuplicateProject.js'
 import dotenv from 'dotenv'
 import { createCDLog } from '../../helpers/createCDLog.js'
@@ -253,7 +253,7 @@ export async function scrapeListing(url: string) {
             }
 
             logger.info('Getting updated name and description');
-            const updatedNameDescriptionProjectQuality = await getUpadtedNameAndDescription(result.data.results[0].name_original, result.data.results[0].description) as unknown as UpdatedNameDescriptionProjectQuality;
+            const updatedNameDescriptionProjectQuality = await getUpdatedNameAndDescription(result.data.results[0].name_original, result.data.results[0].description) as unknown as UpdatedNameDescriptionProjectQuality;
             logger.info("Updated name and description:\n" + JSON.stringify(updatedNameDescriptionProjectQuality, null, 2));
 
             createCDLog(user.id, JSON.stringify({scraped_url:url, ...updatedNameDescriptionProjectQuality, ...job, aud_timestamp:aud_timestamp }))

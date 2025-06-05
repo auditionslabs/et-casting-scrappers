@@ -10,7 +10,7 @@ import { addProjectToET } from '../../helpers/addProjectToET.js'
 import { addProjectApps } from '../../helpers/addProjectApps.js'
 import { rateDescription } from '../../types/casting.js'
 import { llm } from '../../config/llm.js'
-import { type UpdatedNameDescriptionProjectQuality, getUpadtedNameAndDescription } from '../../helpers/getUpdatedNameDescriptionProjectQuality.js'
+import { type UpdatedNameDescriptionProjectQuality, getUpdatedNameAndDescription } from '../../helpers/getUpdatedNameDescriptionProjectQuality.js'
 
 
 export type Listing = {
@@ -133,7 +133,7 @@ export async function scrapeListing(listing: ScrapedJob, user: { id: number, ema
         const job = data.results[0]
 
 
-        const result = await getUpadtedNameAndDescription(listing.title, listing.job_description) as unknown as UpdatedNameDescriptionProjectQuality
+        const result = await getUpdatedNameAndDescription(listing.title, listing.job_description) as unknown as UpdatedNameDescriptionProjectQuality
         const updatedJob = {
             ...job,
             title: result.name,
