@@ -57,7 +57,7 @@ jobs:
         script: |
           cd /
           echo "Changing to root user"
-          sudo -S ${{ secrets.SUDO_PASS_MDX }} su
+          echo ${{ secrets.SUDO_PASS_MDX }} | sudo -S su
 
           echo "Stop listing-scrapers"
           docker stop ghcr.io/${{ github.repository }}/listing-scrapers:latest
