@@ -56,7 +56,7 @@ async function startScraper() {
 						job_description: z.array(z.string()),
 						union_job: z.boolean(),
 						compensation: z.enum(['Paid', 'Unpaid']),
-						rate: z.number() || 262,
+						rate: z.number().default(262),
 						company_url: z.string(),
 					}))
 

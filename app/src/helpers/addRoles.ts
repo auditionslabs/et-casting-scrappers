@@ -5,7 +5,7 @@ import { generateObject } from "ai";
 import { z } from "zod";
 import { db } from "../config/database.js";
 import { llm } from "../config/llm.js";
-import { getFutureDate } from "../utils/dateUtils.js";
+import { getFutureDate, parseDateToTimestamp } from "../utils/dateUtils.js";
 
 type llmResponse = {
     results: Role[]
@@ -30,7 +30,7 @@ export async function addRoles(title: string, description: string, job_url: stri
 
     const schema = z.object({
         results: z.array(z.object({
-            expiration_timestamp: z.number() || getFutureDate(new Date(), 30),
+            expiration_timestamp: z.number().default(parseDateToTimestamp(getFutureDate(new Date(), 30))),
             audition_timestamp: z.number().optional(),
             shoot_timestamp: z.number().optional(),
             name: z.string().optional(),
@@ -38,8 +38,8 @@ export async function addRoles(title: string, description: string, job_url: stri
             des: z.string().optional(),
             gender_male: z.number().optional(),
             gender_female: z.number().optional(),
-            age_min: z.number() || 3,
-            age_max: z.number() || 80,
+            age_min: z.number().default(3),
+            age_max: z.number().default(80),
             height_min: z.number().optional(),
             height_max: z.number().optional(),
             ethnicity_any: z.number().optional(),

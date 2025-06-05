@@ -103,7 +103,7 @@ export async function scrapeListing(listing: ScrapedJob, user: { id: number, ema
             results: z.array(
                 z.object({
                     title: z.string(),
-                    location: z.string() || 'N/A',
+                    location: z.string().default('N/A'),
                     type: z.string(),
                     skills: z.string(),
                     company_name: z.string(),

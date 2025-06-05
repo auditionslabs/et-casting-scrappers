@@ -171,12 +171,12 @@ export async function scrapeListing(url: string) {
                     date_posted: z.string(),
                     application_url: z.string(),
                     snr_type: z.enum(snr_type_keys),
-                    compensation: z.string() || 262,
+                    compensation: z.string().default("262"),
                     rate_des: z.enum(rate_des_keys),
-                    project_quality: z.number() || 0,
+                    project_quality: z.number().default(0),
                     category: z.enum(categoryKeys),
                     union_job: z.boolean(),
-                    rate: z.number() || 262,
+                    rate: z.number().default(262),
                     project_name: z.string(),
                     application_email: z.string().optional()
                 })
@@ -210,8 +210,8 @@ export async function scrapeListing(url: string) {
 
             const casting_director_schema = z.object({
                 result: z.object({
-                    casting_company_name: z.string() || "not_found",
-                    casting_director_name: z.string() || "not_found"
+                    casting_company_name: z.string().default("not_found"),
+                    casting_director_name: z.string().default("not_found")
                 })
                 .describe(`Extract the casting company name and casting director name from the search results. If the casting company name is not found, return "not_found".`)
             })
