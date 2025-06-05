@@ -60,16 +60,16 @@ jobs:
           echo ${{ secrets.SUDO_PASS_MDX }} | sudo -S su
 
           echo "Stop listing-scrapers"
-          docker stop ghcr.io/${{ github.repository }}/listing-scrapers:latest
+          sudo docker stop ghcr.io/${{ github.repository }}/listing-scrapers:latest
 
           echo "Remove listing-scrapers"
-          docker rm ghcr.io/${{ github.repository }}/listing-scrapers:latest
+          sudo docker rm ghcr.io/${{ github.repository }}/listing-scrapers:latest
 
           echo "Logging into GitHub Container Registry"
-          echo "${{ secrets.PAT_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo "${{ secrets.PAT_TOKEN }}" | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
           echo "Pulling the image from GHCR"
-          docker pull ghcr.io/${{ github.repository }}/listing-scrapers:latest
+          sudo docker pull ghcr.io/${{ github.repository }}/listing-scrapers:latest
 
           echo "Running the updated code in detached mode."
-          docker run -dit ghcr.io/${{ github.repository }}/listing-scrapers:latest
+          sudo docker run -dit ghcr.io/${{ github.repository }}/listing-scrapers:latest
