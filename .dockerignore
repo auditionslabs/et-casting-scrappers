@@ -1,0 +1,7 @@
+.idea
+.vscode
+app/node_modules
+app/dist
+app/coverage
+app/logs
+app/exports

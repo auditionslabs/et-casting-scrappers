@@ -67,3 +67,5 @@ export interface Castings {
 export interface Database {
   castings: Castings
 }
+
+

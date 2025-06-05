@@ -31,7 +31,7 @@ ADD ./app /app
 RUN npm install
 
 # Install Playwright and its browser dependencies
-RUN npx playwright install --with-deps
+RUN npx playwright install --with-deps chromium
 
 # Install tsx globally
 RUN npm install -g tsx
