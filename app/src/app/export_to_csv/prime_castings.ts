@@ -25,10 +25,6 @@ interface MappedItem {
 }
 
 
-
-
-
-
 export async function exportByCategory() {
 
     const rateDescriptionValueToKey = Object.fromEntries(Object.entries(rateDescription).map(([key, value]) => [value, key]));

@@ -1,5 +1,5 @@
-import { db } from "@/config/database"
-import { llm } from "@/config/llm"
+import { db } from "../../config/database.js"
+import { llm } from "../../config/llm.js"
 import { generateText } from "ai"
 
 export async function summerizeDescription(description: string, roles_json: string) {
