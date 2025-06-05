@@ -56,7 +56,7 @@ export async function exportByCategory() {
                     // console.log(JSON.stringify(data, null, 2));
                     // process.exit(0);
                     const updatedData: MappedItem[] = []
-                    data.forEach(async item => {
+                    for (const item of data) {
                         const roles = await getRoles(item.casting_id)
                         const summary = await summerizeDescription(item.des || '', JSON.stringify(roles) || '');
                         updatedData.push({
@@ -71,11 +71,11 @@ export async function exportByCategory() {
                             "Market": item.market || '',
                             "ET Public URL": `https://www.exploretalent.com/auditions/${item.casting_id}`,
                         })
-                    });
+                    }
                     // console.log(updatedData)
                     // process.exit(0);
-                    const worksheet = xlsx.utils.json_to_sheet(updatedData)
-                    xlsx.utils.book_append_sheet(workbook, worksheet, key)
+                    const worksheet = xlsx.utils.json_to_sheet(updatedData);
+                    xlsx.utils.book_append_sheet(workbook, worksheet, key);
                 }
             }));
             const filePath = path.join(exportsDir, 'by_category.xlsx');

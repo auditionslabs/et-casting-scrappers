@@ -28,10 +28,10 @@ WORKDIR /app
 ADD ./app /app
 
 # Install npm dependencies
-RUN npm install chromium
+RUN npm install
 
 # Install Playwright and its browser dependencies
-RUN npx playwright install --with-deps
+RUN npx playwright install --with-deps chromium
 
 # Install tsx globally
 RUN npm install -g tsx
