@@ -2,7 +2,6 @@
 
 import { db } from '../config/database.js'
 import logger from '../config/logger.js'
-import { Listing } from '../app/project_casting/scrape_listings.js'
 import { formatDateToMySQL } from '../utils/dateUtils.js'
 
 
@@ -20,7 +19,6 @@ export async function addProjectApps(title:string, job_url:string) {
                 ])
             )
             .orderBy('date_created', 'desc');
-        // console.log("Query: ", query.compile())
         const casting = await query.execute();
     if (casting.length === 0) {
         logger.error('Casting not found:', title, job_url);

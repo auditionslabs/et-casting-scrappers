@@ -21,10 +21,10 @@ dotenv.config()
 import { scrapeListing } from "./scrape_listings.js"
 import { CDUser, ScrapedJob } from "@/types/casting.js"
 // Remove duplicate import since searchCD is already imported above
-import { searchCD } from "../../helpers/searchCD.js"
+import { searchCDByCompany } from "../../helpers/searchCD.js"
 
 const scrappedJob: ScrapedJob = JSON.parse('{\"title\":\"$4,600+ Casting Call – Outdoor Enthusiasts (Ages 20 to 50)\",\"company_name\":\"Kris and Kara Casting\",\"job_url\":\"https://projectcasting.com/job/4600-casting-call-outdoor-enthusiasts-ages-20-to-50\",\"date_posted\":\"June 2, 2025\",\"job_description\":[\"Job Description\",\"A national commercial campaign is casting real outdoor enthusiasts in Vancouver, BC! We’re looking for energetic individuals aged 20–50 who love adventure and thrive in nature. This is a non-union commercial shoot—no acting experience is needed, just a genuine passion for the outdoors. If you can hike uphill, run through mud, or ride the waves, this could be your next big gig.\",\"Job Responsibilities\",\"• Participate in action-based scenes such as hiking, biking, fishing, or snow sports\",\"• Navigate uneven outdoor terrain with confidence and enthusiasm\",\"• Follow basic on-set direction from production crew\",\"• Represent authentic outdoor lifestyles on screen\",\"Requirements\",\"• Ages 20–50, all genders and ethnicities welcome\",\"• Must be based in or able to work as a local in Vancouver\",\"• Physically fit and comfortable performing outdoor activities\",\"• Open to those experienced in hiking, climbing, surfing, skiing, biking, camping, or fishing\",\"• No prior acting experience required\",\"Compensation\",\"• $600 per day\",\"• Additional $4,000 one-year buyout (if featured in final edit)\",\"• Potential conflict: automobile sales & leasing (cars, trucks, SUVs)\"],\"union_job\":false,\"compensation\":\"Paid\",\"rate\":4600,\"company_url\":\"https://projectcasting.com/company/kris-and-kara-casting\"}')
-const user = await searchCD(scrappedJob.company_name)
+const user = await searchCDByCompany(scrappedJob.company_name)
 console.log(user)
 const data = await scrapeListing(scrappedJob, user as CDUser)
 console.log(JSON.stringify(data, null, 2))

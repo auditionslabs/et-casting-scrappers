@@ -6,10 +6,10 @@ export type Role = {
     name?: string;
     number_of_people?: number;
     des?: string;
-    gender_male?: number;
-    gender_female?: number;
-    age_min?: number;
-    age_max?: number;
+    gender_male: number | 0;
+    gender_female: number | 0;
+    age_min: number | 3;
+    age_max: number | 80;
     height_min?: number;
     height_max?: number;
     ethnicity_any?: number;

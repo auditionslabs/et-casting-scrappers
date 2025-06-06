@@ -3,7 +3,6 @@ import { z } from 'zod'
 import LLMScraper from 'llm-scraper'
 import logger from '../../config/logger.js'
 import { CategoryEnum, MappedJob, ScrapedJob } from '../../types/casting.js'
-import { generateObject } from 'ai'
 import { createCDLog } from '../../helpers/createCDLog.js'
 import { addRoles } from '../../helpers/addRoles.js'
 import { addProjectToET } from '../../helpers/addProjectToET.js'
@@ -48,7 +47,6 @@ function getDomain(url: string): string | null {
 }
 
 async function mapJobToDatabase(listing: Listing & { updated_title: string, updated_description: string }, user: { id: number, email: string }) {
-    // console.log(JSON.stringify(listing, null, 2))
     const currentTime = Math.floor(Date.now() / 1000);
 
     const mapped: MappedJob = {

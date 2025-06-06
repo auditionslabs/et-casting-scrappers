@@ -22,9 +22,6 @@ export async function addProjectToET(mappedJob: MappedJob) {
 			body.append(key, String(mappedJob[key]))
 		}
 
-
-		// console.log("Body:", body.toString())
-		// process.exit(0)
 		const response = await fetch("https://api.exploretalent.com/v1/admin/projects", {
 			method: "POST",
 			headers: headers,
@@ -32,7 +29,6 @@ export async function addProjectToET(mappedJob: MappedJob) {
 		});
 
 		
-		// console.log("Response:", JSON.stringify(response, null, 2))
 
 		await new Promise(resolve => setTimeout(resolve, 500));
 

@@ -9,6 +9,7 @@
     "moment-timezone": "^0.6.0",
     "mysql2": "^3.14.1",
     "playwright": "^1.52.0",
+    "ts-md5": "^1.3.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3",
     "winston": "^3.17.0",
@@ -24,7 +25,8 @@
     "start:auditions_free": "node dist/app/auditions_free/index.js",
     "dev:auditions_free": "ts-node --esm src/app/auditions_free/index.ts",
     "export:category": "node dist/app/export_to_csv/by_category.js",
-    "export:prime_castings": "node dist/app/export_to_csv/prime_castings.js"
+    "export:prime_castings": "node dist/app/export_to_csv/prime_castings.js",
+    "start:all_castings": "node dist/app/all_castings/index.js"
   },
   "type": "module",
   "devDependencies": {
