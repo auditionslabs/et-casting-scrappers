@@ -24,6 +24,24 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.PAT_TOKEN }}
+      
+    - name: Create .env file
+      run: |
+        echo "GOOGLE_GENERATIVE_AI_API_KEY=${{vars.GOOGLE_GENERATIVE_AI_API_KEY}}" > .env
+        echo "OPENAI_API_KEY=${{vars.OPENAI_API_KEY}}" >> .env
+        echo "DB_HOST=${{vars.DB0_HOST}}" >> .env
+        echo "DB_PORT=${{vars.DB_PORT}}" >> .env
+        echo "DB_DRIVER=${{vars.DB_DRIVER}}" >> .env
+        echo "DB_CONNECTION=${{vars.DB_CONNECTION}}" >> .env
+        echo "DB_DATABASE=${{vars.DB_DATABASE}}" >> .env
+        echo "DB_USERNAME=${{vars.DB_USERNAME}}" >> .env
+        echo "DB_PASSWORD=${{vars.DB_PASSWORD}}" >> .env
+        echo "TRM_STAFF_USER_ID=${{vars.TRM_STAFF_USER_ID}}" >> .env
+        echo "OPENAI_MODEL=${{vars.OPENAI_MODEL}}" >> .env
+        echo "EXPLORE_TALENT_API_KEY=${{vars.EXPLORE_TALENT_API_KEY}}" >> .env
+        echo "TZ=${{vars.TZ}}" >> .env
+        echo "SEARCH_BASE_URL=${{vars.SEARCH_BASE_URL}}" >> .env
+
         
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
@@ -31,22 +49,6 @@ jobs:
         context: .
         push: true
         tags: ghcr.io/${{ github.repository }}/listing-scrapers:latest
-      env:
-        GOOGLE_GENERATIVE_AI_API_KEY: ${{vars.GOOGLE_GENERATIVE_AI_API_KEY}}
-        OPENAI_API_KEY:  ${{vars.OPENAI_API_KEY}}
-        DB_HOST:  ${{vars.DB_HOST}}
-        DB_PORT:  ${{vars.DB_PORT}}
-        DB_DRIVER:  ${{vars.DB_DRIVER}}
-        DB_CONNECTION:  ${{vars.DB_CONNECTION}}
-        DB_DATABASE:  ${{vars.DB_DATABASE}}
-        DB_USERNAME:  ${{vars.DB_USERNAME}}
-        DB_PASSWORD:  ${{vars.DB_PASSWORD}}
-        TRM_STAFF_USER_ID:  ${{vars.TRM_STAFF_USER_ID}}
-        OPENAI_MODEL:  ${{vars.OPENAI_MODEL}}
-        EXPLORE_TALENT_API_KEY:  ${{vars.EXPLORE_TALENT_API_KEY}}
-        TZ:  ${{vars.TZ}}
-        SEARCH_BASE_URL:  ${{vars.SEARCH_BASE_URL}}
-
     
     - name: Deploy to Server
       uses: appleboy/ssh-action@v1
@@ -60,16 +62,16 @@ jobs:
           echo ${{ secrets.SUDO_PASS_MDX }} | sudo -S su
 
           echo "Stop listing-scrapers"
-          echo ${{ secrets.SUDO_PASS_MDX }} | sudo -S docker stop ghcr.io/${{ github.repository }}/listing-scrapers:latest
+          docker stop ghcr.io/${{ github.repository }}/listing-scrapers:latest
 
           echo "Remove listing-scrapers"
-          echo ${{ secrets.SUDO_PASS_MDX }} | sudo -S docker rm ghcr.io/${{ github.repository }}/listing-scrapers:latest
+          docker rm ghcr.io/${{ github.repository }}/listing-scrapers:latest
 
           echo "Logging into GitHub Container Registry"
-          echo "${{ secrets.PAT_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
           echo "Pulling the image from GHCR"
-          sudo docker pull ghcr.io/${{ github.repository }}/listing-scrapers:latest
+          docker pull ghcr.io/${{ github.repository }}/listing-scrapers:latest
 
           echo "Running the updated code in detached mode."
-          echo ${{ secrets.SUDO_PASS_MDX }} | sudo -S docker run -dit ghcr.io/${{ github.repository }}/listing-scrapers:latest
+          docker run -dit ghcr.io/${{ github.repository }}/listing-scrapers:latest
