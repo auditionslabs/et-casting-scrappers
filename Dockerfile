@@ -26,6 +26,7 @@ WORKDIR /app
 
 # Copy your app files
 ADD ./app /app
+ADD .env /app/.env
 
 # Install npm dependencies
 RUN npm install

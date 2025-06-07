@@ -3,9 +3,9 @@ import { z } from 'zod'
 import LLMScraper from 'llm-scraper'
 import logger from '../../config/logger.js'
 import { llm } from '../../config/llm.js'
-import { getFutureDate, parseDateToTimestamp, getCurrentTimestamp } from '../../utils/dateUtils.js'
+import { parseDateToTimestamp, getCurrentTimestamp } from '../../utils/dateUtils.js'
 import { CDUser, rateDescription, snr_type, CategoryEnum, MappedJob } from '../../types/casting.js'
-import { searchCD } from '../../helpers/searchCD.js'
+import { searchCDByCompany } from '../../helpers/searchCD.js'
 import { generateObject } from 'ai'
 import { getUpdatedNameAndDescription, type UpdatedNameDescriptionProjectQuality } from '../../helpers/getUpdatedNameDescriptionProjectQuality.js'
 import { searchDuplicateProject } from '../../helpers/checkDuplicateProject.js'
@@ -46,7 +46,7 @@ export interface ScrapedJob2 {
     }
 }
 
-interface ExtractedAuditionDate {
+export interface ExtractedAuditionDate {
     audition_date: string,
 }
 
@@ -126,7 +126,6 @@ export async function extractAuditionDate(description: string[]) {
         schema: schema,
         prompt: `Extract the audition date from the description: ${description}. Use the date in the format YYYY-MM-DD. If there is no year provided use current year. Current year is: ${new Date().getFullYear()}`
     })
-    // console.log(JSON.stringify(result, null, 2));
     return result.object.audition_date;
 }
 
@@ -141,7 +140,6 @@ async function extractExpirationDate(description: string) {
         
         Today's date is: ${new Date().toISOString()}`
     })
-    // console.log(JSON.stringify(result, null, 2));
     return result.object.expiration_date;
 }
 
@@ -215,16 +213,13 @@ export async function scrapeListing(url: string) {
                 })
                 .describe(`Extract the casting company name and casting director name from the search results. If the casting company name is not found, return "not_found".`)
             })
-
             const casting_director_result = await scraper.run(page, casting_director_schema, { format: 'html', maxTokens: 20000 }) as unknown as { data: ScrapedJob2 }
 
-            // console.log(JSON.stringify(casting_director_result, null, 2));
             logger.info("Casting Director Result:\n" + JSON.stringify(casting_director_result.data, null, 2));
-            // process.exit(0);
             
             if (casting_director_result.data.result.casting_company_name !== "not_found") {
                 logger.info(`Searching for CD user: ${casting_director_result.data.result.casting_company_name}`);
-                user = await searchCD(casting_director_result.data.result.casting_company_name) as CDUser
+                user = await searchCDByCompany(casting_director_result.data.result.casting_company_name) as CDUser
                 logger.info("CD User found:\n" + JSON.stringify(user, null, 2));
             }
             else {
@@ -243,8 +238,6 @@ export async function scrapeListing(url: string) {
                 }
             }
 
-            // console.log(JSON.stringify(user, null, 2));
-            // process.exit(0);
             if (result.data.results[0].snr_type === "Open Call") {
                 logger.info('Extracting audition date for Open Call');
                 const snr_result = await extractAuditionDate(result.data.results[0].description) as unknown as ExtractedAuditionDate;
@@ -265,8 +258,6 @@ export async function scrapeListing(url: string) {
             logger.info("Mapped job:\n" + JSON.stringify(mappedJob, null, 2));
 
             logger.info('Adding project to Explore Talent');
-            // console.log(JSON.stringify(mappedJob, null, 2));
-            // process.exit(0);
             await addProjectToET(mappedJob as MappedJob)
             await addRoles(mappedJob.name,job.description.join(" "), url)
             await addProjectApps(mappedJob.name, url)

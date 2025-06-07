@@ -49,7 +49,6 @@ export async function exportByCategory() {
                     .orderBy('c.casting_id', 'desc')
                     .limit(100)
 
-                console.log(query.compile())
                 const data = await query.execute()
                 
                 if (data.length > 0) {

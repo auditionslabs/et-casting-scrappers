@@ -3,7 +3,7 @@ import { z } from 'zod'
 import LLMScraper from 'llm-scraper'
 import dotenv from 'dotenv'
 import logger from '../../config/logger.js'
-import { searchCD } from '../../helpers/searchCD.js'
+import { searchCDByCompany } from '../../helpers/searchCD.js'
 import { searchDuplicateProject } from '../../helpers/checkDuplicateProject.js'
 import { CDUser, ScrapedJob } from '../../types/casting.js'
 import { scrapeListing } from './scrape_listings.js'
@@ -69,7 +69,6 @@ async function startScraper() {
 
 			const { data } = (await scraper.run(page, schema, { format: 'html', maxTokens: 20000 })) as unknown as { data: ScraperResult };
 
-			// console.log(JSON.stringify(data, null, 2))
 			logger.info("Scraper Result:\n" + JSON.stringify(data))
 
 			// Show the result from LLM
@@ -77,13 +76,11 @@ async function startScraper() {
 			await page.close()
 			logger.info("Adding Projects to Database")
 			for (const job of data.results) {
-				const user = await searchCD(job.company_name)
+				const user = await searchCDByCompany(job.company_name)
 				const duplicate = await searchDuplicateProject(job.title, job.job_url)
-				// console.log("duplicate:", duplicate)
 				if (!duplicate) {
 					try {
 						const scrapedAndMappedJob = await scrapeListing(job as ScrapedJob, user as CDUser)
-						// console.log(scrapedAndMappedJob)
 
 						logger.info(`Added new project: ${scrapedAndMappedJob.name}`)
 					} catch (error) {
