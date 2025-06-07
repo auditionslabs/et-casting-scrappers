@@ -48,7 +48,7 @@ export async function searchCDByCompany(company: string) {
     } catch (error) {
 
         logger.error('Error searching CD user:', error)
-        logger.error("Query: ", query.compile())
+        logger.error("Query: ", JSON.stringify(query.compile(), null, 2))
         return {
             id: 1,
             email: 'booking@exploretalent.com',

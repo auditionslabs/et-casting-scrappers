@@ -22,6 +22,7 @@ const baseUrl = 'https://allcasting.com'
 const categoryKeys = Object.keys(CategoryEnum).filter(key => key !== '') as [keyof typeof CategoryEnum, ...(keyof typeof CategoryEnum)[]];
 const rate_des_keys = Object.keys(rateDescription).filter(key => key !== 'n/a') as [keyof typeof rateDescription, ...(keyof typeof rateDescription)[]];
 const snr_type_keys = Object.keys(snr_type).filter(key => key !== 'n/a') as [keyof typeof snr_type, ...(keyof typeof snr_type)[]];
+const browser = await chromium.launch()
 
 export interface ScrapedJob {
     name_original: string,
@@ -70,7 +71,7 @@ function mapJobToDatabase(job: ScrapedJob, user: CDUser, updated_name: string, u
     return mapped;
 }
 
-export async function scrapeListing(listing: ScraperResult, browser: Browser) {
+export async function scrapeListing(listing: ScraperResult) {
     const page = await browser.newPage();
     
     try {
@@ -116,8 +117,9 @@ export async function scrapeListing(listing: ScraperResult, browser: Browser) {
         // Add project apps
         await addProjectApps(mappedJob.name, listing.url)
         // Create CD log
-        await createCDLog(user.id, JSON.stringify({scraped_url: listing.url, ...data}))
+        await createCDLog(user.id, JSON.stringify({scraped_url: baseUrl + listing.url, ...data}))
         logger.info('Project added successfully: ' + mappedJob.name);
+        await page.close()
 
 // process.exit(0);
     }

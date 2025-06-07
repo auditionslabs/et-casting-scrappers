@@ -8,5 +8,5 @@ const ex1 = {
     "url": "/castingcall/286608"
   }
 
-await scrapeListing(ex1, browser)
+await scrapeListing(ex1)
 process.exit(0);
