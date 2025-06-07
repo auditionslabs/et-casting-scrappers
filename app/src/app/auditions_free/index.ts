@@ -42,7 +42,7 @@ async function startScraper() {
 			// logger.info('Opening Auditions Free')
 
 			await page.goto(`${BASE_URL}${i}/`)
-			// logger.info(`Auditions Free Opened: ${i}`)
+			logger.info(`Auditions Free Opened: ${i}`)
 
             // await page.waitForSelector(".site-content")
 

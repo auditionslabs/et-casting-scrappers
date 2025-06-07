@@ -213,7 +213,6 @@ export async function scrapeListing(url: string) {
                 })
                 .describe(`Extract the casting company name and casting director name from the search results. If the casting company name is not found, return "not_found".`)
             })
-
             const casting_director_result = await scraper.run(page, casting_director_schema, { format: 'html', maxTokens: 20000 }) as unknown as { data: ScrapedJob2 }
 
             logger.info("Casting Director Result:\n" + JSON.stringify(casting_director_result.data, null, 2));

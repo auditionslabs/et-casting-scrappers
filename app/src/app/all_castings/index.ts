@@ -20,7 +20,6 @@ export type ScraperResult = {
 
 async function startScraper() {
     
-
     try {
         for (let i = 6; i <= 7; i++) {
             try {
