@@ -14,11 +14,14 @@
 
 FROM ubuntu:24.04
 
+# Set Timezone
+ENV TZ=America/Los_Angeles
+
 # Install system dependencies and Node.js 20.x (adjust if you need a different version)
 RUN apt-get update && \
     apt-get install -y curl wget gnupg ca-certificates && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs && \
+    apt-get install -y nodejs cron && \
     apt-get clean
 
 # Set working directory
@@ -26,7 +29,9 @@ WORKDIR /app
 
 # Copy your app files
 ADD ./app /app
-ADD .env /app/.env
+# ADD .env /app/.env
+ADD crontab /etc/cron.d/crontab
+RUN service cron start
 
 # Install npm dependencies
 RUN npm install
