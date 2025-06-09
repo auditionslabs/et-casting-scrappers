@@ -21,7 +21,7 @@ export type ScraperResult = {
 async function startScraper() {
     
     try {
-        for (let i = 6; i <= 7; i++) {
+        for (let i = 1; i <= 5; i++) {
             try {
                 browser = await chromium.launch()
                 const page = await browser.newPage()

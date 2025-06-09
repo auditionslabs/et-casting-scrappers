@@ -32,7 +32,7 @@ let browser: any = null
 
 async function startScraper() {
 	try {
-		for (let i = 4; i <= 6; i++) {
+		for (let i = 1; i <= 5; i++) {
 
 			logger.info('Starting Auditions Free Scraper')
 			dotenv.config()
