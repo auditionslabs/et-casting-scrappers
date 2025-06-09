@@ -62,7 +62,7 @@ jobs:
           echo ${{ secrets.SUDO_PASS_MDX }} | sudo -S su
 
           echo "Stop listing-scrapers"
-          docker et-casting-scrappers
+          docker stop et-casting-scrappers
 
           echo "Remove listing-scrapers"
           docker rm et-casting-scrappers
