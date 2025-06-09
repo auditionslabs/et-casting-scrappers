@@ -62,10 +62,10 @@ jobs:
           echo ${{ secrets.SUDO_PASS_MDX }} | sudo -S su
 
           echo "Stop listing-scrapers"
-          docker et-web-scraper
+          docker et-casting-scrappers
 
           echo "Remove listing-scrapers"
-          docker rm et-web-scraper
+          docker rm et-casting-scrappers
 
           echo "Logging into GitHub Container Registry"
           docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -74,4 +74,4 @@ jobs:
           docker pull ghcr.io/${{ github.repository }}/listing-scrapers:latest
 
           echo "Running the updated code in detached mode."
-          docker run --name et-web-scraper -dit ghcr.io/${{ github.repository }}/listing-scrapers:latest 
+          docker run --name et-casting-scrappers -dit ghcr.io/${{ github.repository }}/listing-scrapers:latest 
