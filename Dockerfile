@@ -45,4 +45,4 @@ RUN npm install -g tsx
 RUN npx tsc
 
 # Start cron service
-CMD ["service", "cron", "start"]
+CMD ["cron", "-f"]
