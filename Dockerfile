@@ -44,4 +44,5 @@ RUN npm install -g tsx
 # Compile TypeScript
 RUN npx tsc
 
-ENTRYPOINT ["service", "cron", "start"]
+# Start cron service
+CMD ["service", "cron", "start"]
