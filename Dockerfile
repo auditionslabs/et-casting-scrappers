@@ -31,7 +31,6 @@ WORKDIR /app
 ADD ./app /app
 # ADD .env /app/.env
 ADD crontab /etc/cron.d/crontab
-RUN service cron start
 
 # Install npm dependencies
 RUN npm install
@@ -44,3 +43,5 @@ RUN npm install -g tsx
 
 # Compile TypeScript
 RUN npx tsc
+
+ENTRYPOINT ["service", "cron", "start"]
