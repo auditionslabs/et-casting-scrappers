@@ -29,7 +29,7 @@ WORKDIR /app
 
 # Copy your app files
 ADD ./app /app
-# ADD .env /app/.env
+ADD .env /app/.env
 ADD crontab /etc/cron.d/crontab
 
 # Install npm dependencies
@@ -43,6 +43,9 @@ RUN npm install -g tsx
 
 # Compile TypeScript
 RUN npx tsc
+
+# Install crontab file
+RUN crontab /etc/cron.d/crontab
 
 # Start cron service
 CMD ["cron", "-f"]

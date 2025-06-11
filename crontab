@@ -1,11 +1,14 @@
-// Project Casting Cron at 6PM every day
+# Project Casting Cron at 6PM every day
 
 0 18 * * * cd /app && npm run start:project_casting
 
-// Auditions Free Cron at 6PM every day
+# Project Casting Cron at 10AM every day
+0 10 * * * cd /app && npm run start:project_casting
 
-0 0 * * * cd /app && npm run start:auditions_free
+# Auditions Free Cron at 6PM every day
 
-// All Castings Cron at 6PM every day
+0 18 * * * cd /app && npm run start:auditions_free
+
+# All Castings Cron at 6PM every day
 
 0 18 * * * cd /app && npm run start:all_castings
