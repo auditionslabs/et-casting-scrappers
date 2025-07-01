@@ -7,7 +7,7 @@ import logger from '../../config/logger.js'
 import { CategoryEnum } from '../../types/casting.js'
 import xlsx from 'xlsx'
 import fs from 'fs';
-import path from 'path';
+import path, { resolve } from 'path';
 import { rateDescription } from '../../types/casting.js';
 import { summerizeDescription, getRoles } from './helper.js';
 
@@ -45,15 +45,17 @@ export async function exportByCategory() {
                     .orderBy('rate', 'desc')
                     .orderBy('qlty_level', 'desc')
                     .orderBy('c.casting_id', 'desc')
-                    .limit(100)
+                    .limit(150)
 
             const data = await query.execute()
-            
-            if (data.length > 0) {
-                const updatedData: MappedItem[] = []
+            const updatedData: MappedItem[] = []
+            if (data.length > 0 && updatedData.length <= 100) {
+
                 for (const item of data) {
                     const roles = await getRoles(item.casting_id)
+                    if (roles.length > 0) {
                     const summary = await summerizeDescription(item.des || '', JSON.stringify(roles) || '');
+                    new Promise((resolve) => setTimeout(resolve,500));
                     updatedData.push({
                         "Casting ID": item.casting_id,
                         "Title": item.name || '',
@@ -63,9 +65,10 @@ export async function exportByCategory() {
                         "Gender": roles[0].gender_male && roles[0].gender_female ? 'Any' : roles[0].gender_male ? 'Male' : roles[0].gender_female ? 'Female' : 'Any',
                         "TRM Admin URL": `https://trm.exploretalent.com/cd/projects/${item.casting_id}/edit`,
                         "Expiration Date": new Date((item.asap || 0) * 1000).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }),
-                        "Market": item.market || '',
-                        "ET Public URL": `https://www.exploretalent.com/auditions/${item.casting_id}`,
-                    })
+                            "Market": item.market || '',
+                            "ET Public URL": `https://www.exploretalent.com/auditions/${item.casting_id}`,
+                        })
+                    }
                 }
                 const worksheet = xlsx.utils.json_to_sheet(updatedData)
                 xlsx.utils.book_append_sheet(workbook, worksheet, 'Prime Castings')

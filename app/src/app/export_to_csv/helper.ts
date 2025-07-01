@@ -14,6 +14,8 @@ export async function getRoles(casting_id: number) {
     const query = db.selectFrom('roles as r')
                     .selectAll()
                     .where('casting_id', '=', casting_id)
+                    .limit(1)
     const data = await query.execute()
+    console.log(data)
     return data
 }
