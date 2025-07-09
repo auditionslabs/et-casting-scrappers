@@ -4,7 +4,7 @@ import { z } from 'zod'
 import LLMScraper from 'llm-scraper'
 import logger from '../../config/logger.js'
 import { llm } from '../../config/llm.js'
-import { parseDateToTimestamp, getCurrentTimestamp } from '../../utils/dateUtils.js'
+import { parseDateToTimestamp, getCurrentTimestamp, getFutureDate } from '../../utils/dateUtils.js'
 import { CDUser, rateDescription, snr_type, CategoryEnum, MappedJob } from '../../types/casting.js'
 import { searchCDByName } from '../../helpers/searchCD.js'
 import { getUpdatedNameAndDescription } from '../../helpers/getUpdatedNameDescriptionProjectQuality.js'
@@ -81,7 +81,7 @@ export async function scrapeListing(listing: ScraperResult) {
         const scraper = new LLMScraper(llm)
         const schema = z.object({
                 name_original: z.string(),
-                expiration_date: z.string().describe("The date should be in YYYY-MM-DD HH:mm:ss format"),
+                expiration_date: z.string().describe("The date should be in YYYY-MM-DD HH:mm:ss format").default(getFutureDate(new Date(), 30).toString()),
                 description: z.array(z.string()),
                 location: z.string(),
                 category: z.enum(categoryKeys),
