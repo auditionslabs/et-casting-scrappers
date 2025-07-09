@@ -1,0 +1,826 @@
+{
+  "index": {
+    "uid": "projects",
+    "primaryKey": "id"
+  },
+  "settings": {
+    "searchableAttributes": [
+      "name",
+      "project",
+      "des",
+      "location",
+      "market",
+      "production",
+      "artist",
+      "photographer",
+      "roles.name",
+      "roles.des",
+      "_searchableText"
+    ],
+    "filterableAttributes": [
+      "cat",
+      "project_type",
+      "location",
+      "market",
+      "paid",
+      "union2",
+      "status",
+      "date_created",
+      "last_modified",
+      "rate_des",
+      "required_phone",
+      "required_photo",
+      "roles.gender_male",
+      "roles.gender_female",
+      "roles.age_min",
+      "roles.age_max",
+      "roles.ethnicity_any",
+      "roles.union_sag",
+      "roles.union_aftra",
+      "_facets.category",
+      "_facets.project_type",
+      "_facets.location",
+      "_facets.market",
+      "_facets.paid",
+      "_facets.union",
+      "_facets.status",
+      "_facets.date_range"
+    ],
+    "sortableAttributes": [
+      "date_created",
+      "last_modified",
+      "rate",
+      "name",
+      "location"
+    ],
+    "rankingRules": [
+      "words",
+      "typo",
+      "proximity",
+      "attribute",
+      "sort",
+      "exactness"
+    ],
+    "pagination": {
+      "maxTotalHits": 1000
+    },
+    "distinctAttribute": null,
+    "typoTolerance": {
+      "enabled": true,
+      "minWordSizeForTypos": {
+        "oneTypo": 4,
+        "twoTypos": 8
+      },
+      "disableOnWords": [],
+      "disableOnAttributes": []
+    },
+    "faceting": {
+      "maxValuesPerFacet": 100
+    }
+  },
+  "documentSchema": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "description": "Unique identifier for the project"
+      },
+      "casting_id": {
+        "type": "number",
+        "description": "Original casting ID from database"
+      },
+      "name": {
+        "type": "string",
+        "description": "Project name"
+      },
+      "name_original": {
+        "type": "string",
+        "description": "Original project name"
+      },
+      "project": {
+        "type": "string",
+        "description": "Project title"
+      },
+      "slug": {
+        "type": "string",
+        "description": "URL slug for the project"
+      },
+      "des": {
+        "type": "string",
+        "description": "Project description"
+      },
+      "project_type": {
+        "type": "number",
+        "description": "Project type ID (0=Commercials, 1=Print, etc.)"
+      },
+      "cat": {
+        "type": "number",
+        "description": "Category ID (1=Commercials, 10=Feature Film - Non-SAG, etc.)"
+      },
+      "location": {
+        "type": "string",
+        "description": "Project location"
+      },
+      "city": {
+        "type": "string",
+        "description": "City"
+      },
+      "state": {
+        "type": "string",
+        "description": "State"
+      },
+      "zip": {
+        "type": "string",
+        "description": "ZIP code"
+      },
+      "country": {
+        "type": "string",
+        "description": "Country"
+      },
+      "address1": {
+        "type": "string",
+        "description": "Address line 1"
+      },
+      "address2": {
+        "type": "string",
+        "description": "Address line 2"
+      },
+      "market": {
+        "type": "string",
+        "description": "Market area"
+      },
+      "market_id": {
+        "type": "string",
+        "description": "Market ID"
+      },
+      "rate": {
+        "type": "number",
+        "description": "Payment rate"
+      },
+      "rate_des": {
+        "type": "number",
+        "description": "Rate description (0=N/A, 1=Per Event, etc.)"
+      },
+      "rate_scale": {
+        "type": "number",
+        "description": "Rate scale"
+      },
+      "agency_rate": {
+        "type": "number",
+        "description": "Agency rate"
+      },
+      "currency_code": {
+        "type": "string",
+        "description": "Currency code"
+      },
+      "compensation_bonus": {
+        "type": "string",
+        "description": "Additional compensation information"
+      },
+      "paid": {
+        "type": "string",
+        "enum": ["0", "1"],
+        "description": "Whether the project is paid (0=Unpaid, 1=Paid)"
+      },
+      "date_created": {
+        "type": "number",
+        "description": "Timestamp when project was created"
+      },
+      "last_modified": {
+        "type": "number",
+        "description": "Timestamp when project was last modified"
+      },
+      "sub_timestamp": {
+        "type": "number",
+        "description": "Submission timestamp"
+      },
+      "aud_timestamp": {
+        "type": "number",
+        "description": "Audition timestamp"
+      },
+      "shoot_timestamp": {
+        "type": "number",
+        "description": "Shoot timestamp"
+      },
+      "union2": {
+        "type": "number",
+        "description": "Union status (0=Non-Union, 1=Union)"
+      },
+      "usage2": {
+        "type": "string",
+        "description": "Usage rights"
+      },
+      "production": {
+        "type": "string",
+        "description": "Production company"
+      },
+      "artist": {
+        "type": "string",
+        "description": "Artist name"
+      },
+      "track": {
+        "type": "string",
+        "description": "Track information"
+      },
+      "excusivity": {
+        "type": "string",
+        "description": "Exclusivity terms"
+      },
+      "photographer": {
+        "type": "string",
+        "description": "Photographer name"
+      },
+      "email1": {
+        "type": "string",
+        "description": "Primary email contact"
+      },
+      "snr_email": {
+        "type": "string",
+        "description": "Secondary email contact"
+      },
+      "srn_address": {
+        "type": "string",
+        "description": "Secondary address"
+      },
+      "required_phone": {
+        "type": "string",
+        "enum": ["0", "1"],
+        "description": "Phone required (0=No, 1=Yes)"
+      },
+      "required_photo": {
+        "type": "string",
+        "enum": ["0", "1"],
+        "description": "Photo required (0=No, 1=Yes)"
+      },
+      "notify_through": {
+        "type": "number",
+        "description": "Notification method"
+      },
+      "status": {
+        "type": "number",
+        "description": "Project status (0=Inactive, 1=Active, 2=Pending, 3=Archived)"
+      },
+      "user_id": {
+        "type": "number",
+        "description": "User ID who created the project"
+      },
+      "staff_id": {
+        "type": "number",
+        "description": "Staff ID"
+      },
+      "bam_only": {
+        "type": "number",
+        "description": "BAM only flag"
+      },
+      "asap": {
+        "type": "number",
+        "description": "ASAP flag"
+      },
+      "email_sub": {
+        "type": "number",
+        "description": "Email submission flag"
+      },
+      "paper_sub": {
+        "type": "number",
+        "description": "Paper submission flag"
+      },
+      "snr": {
+        "type": "number",
+        "description": "SNR flag"
+      },
+      "welcome": {
+        "type": "number",
+        "description": "Welcome flag"
+      },
+      "wel_sent": {
+        "type": "number",
+        "description": "Welcome sent flag"
+      },
+      "qlty_level": {
+        "type": "number",
+        "description": "Quality level"
+      },
+      "past": {
+        "type": "number",
+        "description": "Past flag"
+      },
+      "by_app_only": {
+        "type": "number",
+        "description": "By appointment only flag"
+      },
+      "app_date_time": {
+        "type": "string",
+        "description": "Appointment date and time"
+      },
+      "app_loc": {
+        "type": "string",
+        "description": "Appointment location"
+      },
+      "is_archive": {
+        "type": "number",
+        "description": "Archive flag"
+      },
+      "expected_time": {
+        "type": "number",
+        "description": "Expected time commitment"
+      },
+      "expected_hours_min": {
+        "type": "number",
+        "description": "Minimum expected hours"
+      },
+      "expected_hours_max": {
+        "type": "number",
+        "description": "Maximum expected hours"
+      },
+      "roles": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "role_id": {
+              "type": "number",
+              "description": "Unique role identifier"
+            },
+            "name": {
+              "type": "string",
+              "description": "Role name"
+            },
+            "des": {
+              "type": "string",
+              "description": "Role description"
+            },
+            "number_of_people": {
+              "type": "number",
+              "description": "Number of people needed for this role"
+            },
+            "gender_male": {
+              "type": "number",
+              "description": "Male gender requirement (0=No, 1=Yes)"
+            },
+            "gender_female": {
+              "type": "number",
+              "description": "Female gender requirement (0=No, 1=Yes)"
+            },
+            "age_min": {
+              "type": "number",
+              "description": "Minimum age requirement"
+            },
+            "age_max": {
+              "type": "number",
+              "description": "Maximum age requirement"
+            },
+            "height_min": {
+              "type": "number",
+              "description": "Minimum height requirement"
+            },
+            "height_max": {
+              "type": "number",
+              "description": "Maximum height requirement"
+            },
+            "ethnicity_any": {
+              "type": "number",
+              "description": "Any ethnicity accepted (0=No, 1=Yes)"
+            },
+            "ethnicity_african": {
+              "type": "number",
+              "description": "African ethnicity requirement"
+            },
+            "ethnicity_african_am": {
+              "type": "number",
+              "description": "African American ethnicity requirement"
+            },
+            "ethnicity_asian": {
+              "type": "number",
+              "description": "Asian ethnicity requirement"
+            },
+            "ethnicity_caribbian": {
+              "type": "number",
+              "description": "Caribbean ethnicity requirement"
+            },
+            "ethnicity_caucasian": {
+              "type": "number",
+              "description": "Caucasian ethnicity requirement"
+            },
+            "ethnicity_hispanic": {
+              "type": "number",
+              "description": "Hispanic ethnicity requirement"
+            },
+            "ethnicity_mediterranean": {
+              "type": "number",
+              "description": "Mediterranean ethnicity requirement"
+            },
+            "ethnicity_middle_est": {
+              "type": "number",
+              "description": "Middle Eastern ethnicity requirement"
+            },
+            "ethnicity_mixed": {
+              "type": "number",
+              "description": "Mixed ethnicity requirement"
+            },
+            "ethnicity_native_am": {
+              "type": "number",
+              "description": "Native American ethnicity requirement"
+            },
+            "ethnicity_x_asian": {
+              "type": "number",
+              "description": "Asian ethnicity requirement (alternative)"
+            },
+            "ethnicity_x_black": {
+              "type": "number",
+              "description": "Black ethnicity requirement (alternative)"
+            },
+            "ethnicity_x_hispanic": {
+              "type": "number",
+              "description": "Hispanic ethnicity requirement (alternative)"
+            },
+            "ethnicity_x_white": {
+              "type": "number",
+              "description": "White ethnicity requirement (alternative)"
+            },
+            "ethnicity_american_in": {
+              "type": "number",
+              "description": "American Indian ethnicity requirement"
+            },
+            "ethnicity_east_indian": {
+              "type": "number",
+              "description": "East Indian ethnicity requirement"
+            },
+            "hair_any": {
+              "type": "number",
+              "description": "Any hair color accepted"
+            },
+            "hair_auburn": {
+              "type": "number",
+              "description": "Auburn hair requirement"
+            },
+            "hair_black": {
+              "type": "number",
+              "description": "Black hair requirement"
+            },
+            "hair_blonde": {
+              "type": "number",
+              "description": "Blonde hair requirement"
+            },
+            "hair_brown": {
+              "type": "number",
+              "description": "Brown hair requirement"
+            },
+            "hair_chestnut": {
+              "type": "number",
+              "description": "Chestnut hair requirement"
+            },
+            "hair_dark_brown": {
+              "type": "number",
+              "description": "Dark brown hair requirement"
+            },
+            "hair_grey": {
+              "type": "number",
+              "description": "Grey hair requirement"
+            },
+            "hair_red": {
+              "type": "number",
+              "description": "Red hair requirement"
+            },
+            "hair_salt_paper": {
+              "type": "number",
+              "description": "Salt and pepper hair requirement"
+            },
+            "hair_white": {
+              "type": "number",
+              "description": "White hair requirement"
+            },
+            "hairstyle_any": {
+              "type": "number",
+              "description": "Any hairstyle accepted"
+            },
+            "hairstyle_afro": {
+              "type": "number",
+              "description": "Afro hairstyle requirement"
+            },
+            "hairstyle_bald": {
+              "type": "number",
+              "description": "Bald hairstyle requirement"
+            },
+            "hairstyle_buzz": {
+              "type": "number",
+              "description": "Buzz cut hairstyle requirement"
+            },
+            "hairstyle_cons": {
+              "type": "number",
+              "description": "Conservative hairstyle requirement"
+            },
+            "hairstyle_dread": {
+              "type": "number",
+              "description": "Dreadlocks hairstyle requirement"
+            },
+            "hairstyle_long": {
+              "type": "number",
+              "description": "Long hairstyle requirement"
+            },
+            "hairstyle_medium": {
+              "type": "number",
+              "description": "Medium hairstyle requirement"
+            },
+            "hairstyle_shaved": {
+              "type": "number",
+              "description": "Shaved hairstyle requirement"
+            },
+            "hairstyle_short": {
+              "type": "number",
+              "description": "Short hairstyle requirement"
+            },
+            "eye_any": {
+              "type": "number",
+              "description": "Any eye color accepted"
+            },
+            "eye_blue": {
+              "type": "number",
+              "description": "Blue eyes requirement"
+            },
+            "eye_b_g": {
+              "type": "number",
+              "description": "Blue-green eyes requirement"
+            },
+            "eye_brown": {
+              "type": "number",
+              "description": "Brown eyes requirement"
+            },
+            "eye_green": {
+              "type": "number",
+              "description": "Green eyes requirement"
+            },
+            "eye_grey": {
+              "type": "number",
+              "description": "Grey eyes requirement"
+            },
+            "eye_g_b": {
+              "type": "number",
+              "description": "Green-blue eyes requirement"
+            },
+            "eye_g_g": {
+              "type": "number",
+              "description": "Green-grey eyes requirement"
+            },
+            "eye_hazel": {
+              "type": "number",
+              "description": "Hazel eyes requirement"
+            },
+            "built_any": {
+              "type": "number",
+              "description": "Any build accepted"
+            },
+            "built_medium": {
+              "type": "number",
+              "description": "Medium build requirement"
+            },
+            "built_athletic": {
+              "type": "number",
+              "description": "Athletic build requirement"
+            },
+            "built_bb": {
+              "type": "number",
+              "description": "Big and bold build requirement"
+            },
+            "built_xlarge": {
+              "type": "number",
+              "description": "Extra large build requirement"
+            },
+            "built_large": {
+              "type": "number",
+              "description": "Large build requirement"
+            },
+            "built_petite": {
+              "type": "number",
+              "description": "Petite build requirement"
+            },
+            "built_thin": {
+              "type": "number",
+              "description": "Thin build requirement"
+            },
+            "built_lm": {
+              "type": "number",
+              "description": "Large medium build requirement"
+            },
+            "built_average": {
+              "type": "number",
+              "description": "Average build requirement"
+            },
+            "union_sag": {
+              "type": "number",
+              "description": "SAG union requirement"
+            },
+            "union_aftra": {
+              "type": "number",
+              "description": "AFTRA union requirement"
+            },
+            "character_type": {
+              "type": "string",
+              "description": "Character type description"
+            },
+            "audition_timestamp": {
+              "type": "number",
+              "description": "Audition timestamp"
+            },
+            "shoot_timestamp": {
+              "type": "number",
+              "description": "Shoot timestamp"
+            },
+            "expiration_timestamp": {
+              "type": "number",
+              "description": "Expiration timestamp"
+            },
+            "last_modified": {
+              "type": "number",
+              "description": "Last modified timestamp"
+            },
+            "status": {
+              "type": "number",
+              "description": "Role status"
+            },
+            "display_full": {
+              "type": "number",
+              "description": "Display full flag"
+            },
+            "is_archive": {
+              "type": "number",
+              "description": "Archive flag"
+            }
+          }
+        },
+        "description": "Array of roles for this project"
+      },
+      "_searchableText": {
+        "type": "string",
+        "description": "Combined searchable text for all project and role content"
+      },
+      "_facets": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "Human-readable category name"
+          },
+          "project_type": {
+            "type": "string",
+            "description": "Human-readable project type name"
+          },
+          "location": {
+            "type": "string",
+            "description": "Location for faceting"
+          },
+          "market": {
+            "type": "string",
+            "description": "Market for faceting"
+          },
+          "paid": {
+            "type": "string",
+            "description": "Paid status for faceting (Paid/Unpaid)"
+          },
+          "union": {
+            "type": "string",
+            "description": "Union status for faceting (Union/Non-Union)"
+          },
+          "status": {
+            "type": "string",
+            "description": "Status for faceting (Active/Inactive/Pending/Archived)"
+          },
+          "date_range": {
+            "type": "string",
+            "description": "Date range for faceting (Today/This Week/This Month/etc.)"
+          }
+        },
+        "description": "Faceted fields for easy filtering"
+      }
+    },
+    "required": ["id", "casting_id", "name", "project", "location", "paid", "date_created", "last_modified", "status", "required_phone", "required_photo", "notify_through", "expected_time"]
+  },
+  "exampleDocument": {
+    "id": "project_12345",
+    "casting_id": 12345,
+    "name": "Summer Commercial Campaign",
+    "name_original": "Summer Commercial Campaign",
+    "project": "Summer Commercial Campaign",
+    "slug": "summer-commercial-campaign",
+    "des": "Looking for energetic actors for a summer beverage commercial. Must be comfortable with outdoor shoots and have a positive attitude.",
+    "project_type": 0,
+    "cat": 1,
+    "location": "Los Angeles, CA",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zip": "90210",
+    "country": "USA",
+    "address1": "123 Hollywood Blvd",
+    "address2": "Suite 100",
+    "market": "Los Angeles",
+    "market_id": "LA",
+    "rate": 500,
+    "rate_des": 3,
+    "rate_scale": 1,
+    "agency_rate": 450,
+    "currency_code": "USD",
+    "compensation_bonus": "Meals provided on set",
+    "paid": "1",
+    "date_created": 1704067200000,
+    "last_modified": 1704067200000,
+    "sub_timestamp": 1704067200000,
+    "aud_timestamp": 1704153600000,
+    "shoot_timestamp": 1704240000000,
+    "union2": 0,
+    "usage2": "National broadcast",
+    "production": "ABC Productions",
+    "artist": "Beverage Brand",
+    "track": "Main campaign",
+    "excusivity": "6 months",
+    "photographer": "John Smith",
+    "email1": "casting@abcproductions.com",
+    "snr_email": "director@abcproductions.com",
+    "srn_address": "456 Sunset Blvd",
+    "required_phone": "1",
+    "required_photo": "1",
+    "notify_through": 1,
+    "status": 1,
+    "user_id": 1001,
+    "staff_id": 2001,
+    "bam_only": 0,
+    "asap": 1,
+    "email_sub": 1,
+    "paper_sub": 0,
+    "snr": 0,
+    "welcome": 1,
+    "wel_sent": 0,
+    "qlty_level": 2,
+    "past": 0,
+    "by_app_only": 0,
+    "app_date_time": null,
+    "app_loc": null,
+    "is_archive": 0,
+    "expected_time": 8,
+    "expected_hours_min": 6,
+    "expected_hours_max": 10,
+    "roles": [
+      {
+        "role_id": 1,
+        "name": "Lead Actor",
+        "des": "Energetic male lead for beverage commercial. Must be athletic and outgoing.",
+        "number_of_people": 1,
+        "gender_male": 1,
+        "gender_female": 0,
+        "age_min": 25,
+        "age_max": 35,
+        "height_min": 68,
+        "height_max": 74,
+        "ethnicity_any": 1,
+        "hair_any": 1,
+        "eye_any": 1,
+        "built_athletic": 1,
+        "union_sag": 0,
+        "union_aftra": 0,
+        "character_type": "Athletic, outgoing, energetic",
+        "audition_timestamp": 1704153600000,
+        "shoot_timestamp": 1704240000000,
+        "expiration_timestamp": 1704153600000,
+        "last_modified": 1704067200000,
+        "status": 1,
+        "display_full": 1,
+        "is_archive": 0
+      },
+      {
+        "role_id": 2,
+        "name": "Supporting Actor",
+        "des": "Supporting role for group scenes. Must work well with others.",
+        "number_of_people": 3,
+        "gender_male": 1,
+        "gender_female": 1,
+        "age_min": 20,
+        "age_max": 40,
+        "height_min": 60,
+        "height_max": 76,
+        "ethnicity_any": 1,
+        "hair_any": 1,
+        "eye_any": 1,
+        "built_any": 1,
+        "union_sag": 0,
+        "union_aftra": 0,
+        "character_type": "Friendly, approachable",
+        "audition_timestamp": 1704153600000,
+        "shoot_timestamp": 1704240000000,
+        "expiration_timestamp": 1704153600000,
+        "last_modified": 1704067200000,
+        "status": 1,
+        "display_full": 1,
+        "is_archive": 0
+      }
+    ],
+    "_searchableText": "summer commercial campaign looking for energetic actors for a summer beverage commercial must be comfortable with outdoor shoots and have a positive attitude los angeles ca abc productions beverage brand main campaign john smith lead actor energetic male lead for beverage commercial must be athletic and outgoing supporting actor supporting role for group scenes must work well with others",
+    "_facets": {
+      "category": "Commercials",
+      "project_type": "Commercials",
+      "location": "Los Angeles, CA",
+      "market": "Los Angeles",
+      "paid": "Paid",
+      "union": "Non-Union",
+      "status": "Active",
+      "date_range": "This Week"
+    }
+  }
+} 

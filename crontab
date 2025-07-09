@@ -12,3 +12,7 @@
 # All Castings Cron at 6PM every day
 
 0 18 * * * cd /app && npm run start:all_castings
+
+# Add Projects to Melisearch every 10 minutes
+
+*/10 * * * * cd /app && npm run start:add_projects_to_melisearch

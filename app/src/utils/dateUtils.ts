@@ -18,3 +18,7 @@ export const parseDateToTimestamp = (date: string | Date) => {
 export const getFutureDate = (date: string | Date, days: number) => {
     return moment(date).tz('America/Los_Angeles').add(days, 'days').format('YYYY-MM-DD HH:mm:ss');
 };
+
+export const epochToIso = (epoch: number): string | null => {
+    return epoch ? moment.unix(epoch).format('YYYY-MM-DD HH:mm:ss') : null;
+};
