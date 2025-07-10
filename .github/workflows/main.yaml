@@ -50,7 +50,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: ghcr.io/${{ github.repository }}/listing-scrapers:latest
+        tags: ghcr.io/auditionslabs/et-casting-scrappers/listing-scrapers:latest
     
     - name: Deploy to Server
       uses: appleboy/ssh-action@v1
@@ -70,10 +70,10 @@ jobs:
           docker rm et-casting-scrappers
 
           echo "Remove the image"
-          docker image rm ghcr.io/${{ github.repository }}/listing-scrapers:latest
+          docker image rm ghcr.io/${{ github.repository }}/listing-scrapers:latest || true
 
           echo "Logging into GitHub Container Registry"
-          docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo ${{ secrets.PAT_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
           echo "Pulling the image from GHCR"
           docker pull ghcr.io/${{ github.repository }}/listing-scrapers:latest
