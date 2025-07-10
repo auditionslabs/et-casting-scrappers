@@ -70,7 +70,7 @@ jobs:
           docker rm et-casting-scrappers
 
           echo "Remove the image"
-          docker image rm et-casting-scrappers
+          docker image rm ghcr.io/${{ github.repository }}/listing-scrapers:latest
 
           echo "Logging into GitHub Container Registry"
           docker login ghcr.io -u ${{ github.actor }} --password-stdin
