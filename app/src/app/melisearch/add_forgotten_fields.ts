@@ -1,20 +1,23 @@
-// If you get a 'Cannot find module \"node-fetch\"' error, run: npm install node-fetch
-import { db } from '../../config/database.js';
+import { CATEGORY_MAP, convertRole, OptimizedDoc } from './helper.js';
+import { getRoles } from '../export_to_csv/helper.js';
 import logger from '../../config/logger.js';
-import { CATEGORY_MAP, OptimizedDoc, oldOptimizedDoc } from './add_projects.js';
 import dotenv from 'dotenv';
 dotenv.config();
+
+logger.info('[START] add_forgotten_fields script');
 
 const MEILI_URL = 'http://23.239.106.139:7700';
 const MEILI_KEY = 'uqgNSaNNO8lJD9Uz2EpEHUM2sRteso5j4wH2qQD1M';
 const INDEX = 'projects';
 const categoryKeys = Object.keys(CATEGORY_MAP).filter(key => key !== '') as [keyof typeof CATEGORY_MAP, ...(keyof typeof CATEGORY_MAP)[]];
 
-async function getAllProjectDocs (): Promise<oldOptimizedDoc[]> {
+async function getAllProjectDocs (): Promise<OptimizedDoc[]> {
+    logger.info('[INFO] Fetching all project docs from Meilisearch...');
     let offset = 0;
     const limit = 1000;
-    let allDocs: oldOptimizedDoc[] = [];
+    let allDocs: OptimizedDoc[] = [];
     while (true) {
+        logger.info(`[INFO] Fetching docs with offset ${offset}, limit ${limit}`);
         const res = await fetch(`${MEILI_URL}/indexes/${INDEX}/documents?limit=${limit}&offset=${offset}`, {
             headers: {
                 'Authorization': `Bearer ${MEILI_KEY}`,
@@ -22,22 +25,21 @@ async function getAllProjectDocs (): Promise<oldOptimizedDoc[]> {
             }
         });
         if (!res.ok) {
-            // console.log(res);
+            logger.error(`[ERROR] Failed to fetch docs: ${res.statusText}`);
             throw new Error(`Failed to fetch docs: ${res.statusText}`);
         }
         const docs = await res.json();
-        // console.log("docs", docs);
-        allDocs = allDocs.concat(docs.results as oldOptimizedDoc[]);
-        // console.log("allDocs", allDocs);
+        logger.info(`[INFO] Fetched ${docs.results.length} docs`);
+        allDocs = allDocs.concat(docs.results as OptimizedDoc[]);
         if (docs.results.length < limit) break;
         offset += limit;
     }
+    logger.info(`[INFO] Total docs fetched: ${allDocs.length}`);
     return allDocs;
 }
 
 async function updateProject(doc: OptimizedDoc) {
-    console.log("doc", doc);
-    // process.exit(0);
+    logger.info(`[INFO] Updating project in Meilisearch for casting_id ${doc.casting_id}`);
     const res = await fetch(`${MEILI_URL}/indexes/${INDEX}/documents`, {
         method: 'PUT',
         headers: {
@@ -46,26 +48,44 @@ async function updateProject(doc: OptimizedDoc) {
         },
         body: JSON.stringify(doc)
     });
-    // console.log("res", res);
-    // process.exit(0);
+    if (!res.ok) {
+        logger.error(`[ERROR] Failed to update doc ${doc.casting_id}: ${res.statusText}`);
+        throw new Error(`Failed to update doc: ${res.statusText}`);
+    }
+    logger.info(`[SUCCESS] Updated doc for casting_id ${doc.casting_id}`);
 }
 
-async function main() {
-    const docs = await getAllProjectDocs();
-    console.log(docs.length);
-    for (const doc of docs) {
-        const newDoc: OptimizedDoc = {
-            ...doc,
-            roles: doc.roles.map(role => ({
-                ...role,
-                age_range: {
-                    min: role.age_range[0],
-                    max: role.age_range[1]
-                }
-            }))
-        }
-        await updateProject(newDoc);
-    }
-    process.exit(0);
+async function updateRoles(casting_id: number) {
+    logger.info(`[INFO] Fetching roles for casting_id ${casting_id}`);
+    const roles = await getRoles(casting_id);
+    const roles_with_fields = roles.map(role => convertRole(role));
+    logger.info(`[INFO] Got ${roles_with_fields.length} roles for casting_id ${casting_id}`);
+    return roles_with_fields;
 }
-main();
+
+async function updateAllProjects() {
+    try {
+        logger.info('[INFO] Starting main function');
+        const docs = await getAllProjectDocs();
+        logger.info(`[INFO] Number of docs to update: ${docs.length}`);
+        let processed = 0;
+        for (const doc of docs) {
+            try {
+                logger.info(`[INFO] Processing casting_id ${doc.casting_id}`);
+                doc.roles = await updateRoles(doc.casting_id);
+                await updateProject(doc);
+                processed++;
+                logger.info(`[INFO] Processed ${processed}/${docs.length}`);
+            } catch (err) {
+                logger.error(`[ERROR] Error updating casting_id ${doc.casting_id}:`, err);
+            }
+        }
+        logger.info(`[COMPLETE] All docs processed. Total: ${processed}`);
+        process.exit(0);
+    } catch (err) {
+        logger.error('[FATAL] Error in main:', err);
+        process.exit(1);
+    }
+}
+
+await updateAllProjects();
