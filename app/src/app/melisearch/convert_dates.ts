@@ -1,7 +1,7 @@
 // If you get a 'Cannot find module \"node-fetch\"' error, run: npm install node-fetch
 import { db } from '../../config/database.js';
 import logger from '../../config/logger.js';
-import { CATEGORY_MAP, OptimizedDoc } from './add_projects.js';
+import { CATEGORY_MAP, OptimizedDoc } from './helper.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
