@@ -1,3 +1,4 @@
+import { db } from '../../config/database.js';
 import { convertLocationToCoordinates } from '../../config/geoLocation.js';
 import logger from '../../config/logger.js';
 
@@ -222,6 +223,7 @@ export type OptimizedDoc = {
     _geo?: { lat: number, lng: number };
     categories: string;
     type: number;
+    apps: number[];
 };
 
 export const CATEGORY_MAP: Record<string, number[]> = {
@@ -283,7 +285,14 @@ export function convertRole(role: OriginalRole): OptimizedRole {
     };
 }
 
-
+export async function getProjectApps(casting_id: number) {
+    const apps = await db.selectFrom('laret_casting_apps').select('app_id').where('casting_id', '=', casting_id).execute();
+    let app_ids: number[] = [];
+    for (const app of apps) {
+        app_ids.push(app.app_id);
+    }
+    return app_ids;
+}
 
 export async function convertDocument(doc: OriginalDoc): Promise<OptimizedDoc> {
     const categoryKeys = Object.keys(CATEGORY_MAP).filter(key => key !== '') as [keyof typeof CATEGORY_MAP, ...(keyof typeof CATEGORY_MAP)[]];
@@ -323,6 +332,7 @@ export async function convertDocument(doc: OriginalDoc): Promise<OptimizedDoc> {
         roles: doc.roles.map(convertRole),
         categories: categories,
         type: doc.snr ?? 0,
+        apps: await getProjectApps(doc.casting_id)
     };
 
     try {
