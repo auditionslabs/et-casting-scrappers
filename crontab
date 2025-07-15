@@ -16,3 +16,7 @@
 # Add Projects to Melisearch every 10 minutes
 
 */10 * * * * cd /app && npm run start:add_projects_to_melisearch
+
+# Update project markets
+
+*/10 * * * * cd /app && npm run update:project_markets

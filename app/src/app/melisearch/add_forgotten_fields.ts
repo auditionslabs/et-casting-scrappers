@@ -1,4 +1,4 @@
-import { CATEGORY_MAP, convertRole, OptimizedDoc } from './helper.js';
+import { CATEGORY_MAP, convertRole, getProjectApps, OptimizedDoc } from './helper.js';
 import { getRoles } from '../export_to_csv/helper.js';
 import logger from '../../config/logger.js';
 import dotenv from 'dotenv';
@@ -72,7 +72,7 @@ async function updateAllProjects() {
         for (const doc of docs) {
             try {
                 logger.info(`[INFO] Processing casting_id ${doc.casting_id}`);
-                doc.roles = await updateRoles(doc.casting_id);
+                doc.apps = await getProjectApps(doc.casting_id);
                 await updateProject(doc);
                 processed++;
                 logger.info(`[INFO] Processed ${processed}/${docs.length}`);
