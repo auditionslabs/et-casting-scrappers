@@ -20,7 +20,8 @@ export async function addPorjectToMelisearch(doc:any, index:string) {
             body: JSON.stringify([doc])
         })
 
-        return project
+        const data = await project.json();
+        return data
     }
     catch (error) {
         console.error(error)
