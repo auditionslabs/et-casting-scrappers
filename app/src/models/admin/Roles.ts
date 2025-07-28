@@ -101,6 +101,7 @@ export interface Roles {
     ethnicity_american_in: number | 0;
     ethnicity_east_indian: number | 0;
     character_type: string | null;
+    ghl_form_id: string | null;
     
   }
   
