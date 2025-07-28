@@ -15,9 +15,6 @@ export async function scheduleImports(data: Array<any>, roleId: number, cdUserId
         "sec-ch-ua-mobile" : '?0',
         "sec-ch-ua-platform" : '"Windows"',
         "Sec-Fetch-Site" : "same-site",
-
-
-
     }   
     const body = {
         query: data,
