@@ -29,7 +29,8 @@ WORKDIR /app
 
 # Copy your app files
 ADD ./app /app
-ADD .env /app/.env
+# .env is not in repo - Coolify injects env vars at runtime; create empty placeholder
+RUN touch /app/.env
 ADD crontab /etc/cron.d/crontab
 
 # Install npm dependencies
