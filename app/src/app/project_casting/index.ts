@@ -30,7 +30,7 @@ let browser: any = null
 
 async function startScraper() {
 	try {
-		for (let i = 1; i <= 10; i++) {
+		for (let i = 1; i <= 15; i++) {
 
 			logger.info('Starting Project Casting Scraper')
 			dotenv.config()
@@ -60,8 +60,8 @@ async function startScraper() {
 						company_url: z.string(),
 					}))
 
-					.length(10)
-					.describe('Top 10 jobs on Project Casting in detail with all the information about the job. Do not wrap any text overflow in elipses or other symbols.'),
+				.length(15)
+				.describe('Top 15 jobs on Project Casting in detail with all the information about the job. Do not wrap any text overflow in elipses or other symbols.'),
 			})
 
 			logger.info('Running Scraper')
