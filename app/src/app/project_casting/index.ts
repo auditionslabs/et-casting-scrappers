@@ -80,9 +80,9 @@ async function startScraper() {
 				const duplicate = await searchDuplicateProject(job.title, job.job_url)
 				if (!duplicate) {
 					try {
-						const scrapedAndMappedJob = await scrapeListing(job as ScrapedJob, user as CDUser)
+						await scrapeListing(job as ScrapedJob, user as CDUser)
 
-						logger.info(`Added new project: ${scrapedAndMappedJob.name}`)
+						logger.info(`Finished pipeline for project: ${job.title}`)
 					} catch (error) {
 						logger.error(`Error adding project ${job.title}:`, error)
 					}

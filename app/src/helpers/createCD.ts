@@ -3,14 +3,21 @@ import logger from '../config/logger.js';
 import { db } from '../config/database.js';
 import { CdUser } from '../models/admin/CdUser.js';
 import { Md5 } from 'ts-md5';
-export async function addCDUserToLaretUsers(email: string) {
-    const user = (await db.selectFrom('cd_user').selectAll().where('email1', '=', email).executeTakeFirst()) as unknown as CdUser;
+export async function addCDUserToLaretUsers(email: string, passwordPlainFallback?: string) {
+    const user = (await db.selectFrom('cd_user').selectAll().where('email1', '=', email).executeTakeFirst()) as unknown as CdUser | undefined;
     logger.info(`Creating Laret User: ${JSON.stringify(user)}`);
+    if (!user) {
+        logger.warn(
+            `cd_user row not found for ${email} after Explore Talent API call; skip laret_users insert until DB is synced or user exists.`
+        );
+        return;
+    }
+    const passwordSource = user.pass ?? passwordPlainFallback ?? '';
     const duplicate = (await db.selectFrom('laret_users').selectAll().where('email', '=', email).execute()).length >= 1;
     if (!duplicate) {
         await db.insertInto('laret_users').values({
             email: email,
-            password: Md5.hashStr(user.pass || ''),
+            password: Md5.hashStr(passwordSource),
             bam_cd_user_id: Number(user.user_id),
             active: 1,
             bam_user_id: 0,
@@ -43,6 +50,11 @@ export async function createCDByCompany(company_name: string) {
     body.append('messaging', '0')
     body.append('date_created', getCurrentTimestamp().toString())
 
+    if (!process.env.EXPLORE_TALENT_API_KEY) {
+        logger.error('EXPLORE_TALENT_API_KEY is missing; cannot create CD via Explore Talent API.');
+        return;
+    }
+
     const response = await fetch("https://api.exploretalent.com/v1/admin/cd_users", {
         "headers": {
             "accept": "*/*",
@@ -63,9 +75,14 @@ export async function createCDByCompany(company_name: string) {
         body: body.toString()
     });
 
+    const responseText = await response.text();
     logger.info(`CD created with company name: ${company_name}`);
-    logger.info(`API Response: ${JSON.stringify(response)}`);
-    await addCDUserToLaretUsers(email);
+    logger.info(`Explore Talent cd_users API status=${response.status} body=${responseText.slice(0, 2000)}`);
+    if (!response.ok) {
+        logger.error(`Explore Talent cd_users API failed: ${response.status} ${response.statusText}`);
+        return;
+    }
+    await addCDUserToLaretUsers(email, pass);
 }
 
 export async function createCDByName(fname: string, lname: string ) {
@@ -89,6 +106,11 @@ export async function createCDByName(fname: string, lname: string ) {
     body.append('messaging', '0')
     body.append('date_created', getCurrentTimestamp().toString())
 
+    if (!process.env.EXPLORE_TALENT_API_KEY) {
+        logger.error('EXPLORE_TALENT_API_KEY is missing; cannot create CD via Explore Talent API.');
+        return;
+    }
+
     const response = await fetch("https://api.exploretalent.com/v1/admin/cd_users", {
         "headers": {
             "accept": "*/*",
@@ -109,7 +131,12 @@ export async function createCDByName(fname: string, lname: string ) {
         body: body.toString()
     });
 
+    const responseText = await response.text();
     logger.info(`CD created: ${fname} ${lname}`)
-    logger.info(`API Response: ${JSON.stringify(response)}`)
-    await addCDUserToLaretUsers(email);
+    logger.info(`Explore Talent cd_users API status=${response.status} body=${responseText.slice(0, 2000)}`)
+    if (!response.ok) {
+        logger.error(`Explore Talent cd_users API failed: ${response.status} ${response.statusText}`);
+        return;
+    }
+    await addCDUserToLaretUsers(email, pass);
 }

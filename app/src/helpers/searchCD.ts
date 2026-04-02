@@ -37,13 +37,22 @@ export async function searchCDByCompany(company: string) {
         } else {
             await createCDByCompany(sanitizedCompany);
 
-            const user = await query.execute();
-            logger.info("CD user created: ", user)
+            const created = await query.execute();
+            logger.info('CD user created lookup:', created);
 
-            return {
-                id: user[0].user_id,
-                email: 'booking@exploretalent.com',
+            if (created && created.length > 0) {
+                return {
+                    id: created[0].user_id,
+                    email: created[0].email1 ?? 'booking@exploretalent.com',
+                };
             }
+            logger.warn(
+                'No local cd_user row after Explore Talent create; using fallback booking user. Check EXPLORE_TALENT_API_KEY and DB sync.'
+            );
+            return {
+                id: 1,
+                email: 'booking@exploretalent.com',
+            };
         }
     } catch (error) {
 
@@ -104,12 +113,21 @@ export async function searchCDByName(name: string): Promise<{ id: number, email:
             }
         } else {
             await createCDByName(firstName, lastName || "lname");
-            const user = await query.execute();
-            logger.info("CD user created: ", user)
-            return {
-                id: user[0].user_id,
-                email: 'booking@exploretalent.com',
+            const created = await query.execute();
+            logger.info('CD user created lookup:', created);
+            if (created && created.length > 0) {
+                return {
+                    id: created[0].user_id,
+                    email: created[0].email1 ?? 'booking@exploretalent.com',
+                };
             }
+            logger.warn(
+                'No local cd_user row after Explore Talent create; using fallback booking user. Check EXPLORE_TALENT_API_KEY and DB sync.'
+            );
+            return {
+                id: 1,
+                email: 'booking@exploretalent.com',
+            };
         }
     } catch (error) {
         logger.error('Error searching CD user:', error)

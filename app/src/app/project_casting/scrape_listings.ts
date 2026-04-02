@@ -146,6 +146,15 @@ export async function scrapeListing(listing: ScrapedJob, user: { id: number, ema
         const mappedJob = await mapJobToDatabase(updatedJob as Listing & { updated_title: string, updated_description: string }, user)
         const response = await addProjectToET(mappedJob as MappedJob)
 
+        if (
+            response &&
+            typeof response === 'object' &&
+            'success' in response &&
+            (response as { success?: boolean }).success === false
+        ) {
+            logger.error('Skipping roles and project apps: project was not added to Explore Talent (see logs above).');
+            return response;
+        }
 
         logger.info("Adding Roles to db.")
         await addRoles(updatedJob.title, updatedJob.description, updatedJob.job_url)

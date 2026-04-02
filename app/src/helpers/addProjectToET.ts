@@ -4,6 +4,10 @@ import logger from "../config/logger.js";
 
 export async function addProjectToET(mappedJob: MappedJob) {
 	try {
+		if (!process.env.EXPLORE_TALENT_API_KEY) {
+			logger.error('EXPLORE_TALENT_API_KEY is missing; cannot POST /v1/admin/projects.');
+			return { success: false as const, error: new Error('EXPLORE_TALENT_API_KEY missing') };
+		}
 		const headers = {
 			"accept": "*/*",
 			"accept-language": "en-IN,en;q=0.6",
@@ -32,13 +36,23 @@ export async function addProjectToET(mappedJob: MappedJob) {
 
 		await new Promise(resolve => setTimeout(resolve, 500));
 
-		if (!response.ok) {
+		const errorBody = await response.text();
 
-			logger.error("Error adding project to Explore Talent:", JSON.stringify(response))
-			throw new Error(`HTTP error! status: ${JSON.stringify(response)}`);
+		if (!response.ok) {
+			logger.error(
+				`Error adding project to Explore Talent: status=${response.status} ${response.statusText} body=${errorBody.slice(0, 4000)}`
+			);
+			throw new Error(`HTTP ${response.status}: ${errorBody.slice(0, 500)}`);
 		}
 
-		const result = await response.json();
+		let result: unknown = {};
+		if (errorBody.trim()) {
+			try {
+				result = JSON.parse(errorBody) as unknown;
+			} catch {
+				logger.warn('Explore Talent projects response was not JSON:', errorBody.slice(0, 500));
+			}
+		}
 		logger.info("Project Added to Explore Talent:" + JSON.stringify(result, null, 2))
 
 		return result;
