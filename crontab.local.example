@@ -19,15 +19,24 @@ CRON_TZ=America/Los_Angeles
 PATH=/home/bold/.nvm/versions/node/v22.19.0/bin:/usr/bin:/bin
 HOME=/home/bold
 
-# Project Casting — 10:00 and 18:00 (CRON_TZ)
-0 18 * * * cd /home/bold/dev/et-casting-scrappers/app && npm run start:project_casting >> /tmp/casting-project_casting.log 2>&1
-0 10 * * * cd /home/bold/dev/et-casting-scrappers/app && npm run start:project_casting >> /tmp/casting-project_casting.log 2>&1
+# TRMX cron dashboard — same values as TRMX server CRON_HEARTBEAT_SECRET; base URL = your Nuxt origin (no trailing slash)
+TRMX_CRON_HEARTBEAT_BASE_URL=https://trmx.example.com
+CRON_HEARTBEAT_SECRET=
+# Optional: heartbeat ping interval (seconds) for long jobs — leave empty to only send start/stop
+# TRMX_CRON_HEARTBEAT_PING_SEC=300
+
+# Project Casting — 10:00 and 18:00 (CRON_TZ). Job IDs must match trmx castingCronCatalog.
+0 18 * * * cd /home/bold/dev/et-casting-scrappers/app && ./scripts/cron-with-heartbeat.sh project_casting_18 npm run start:project_casting >> /tmp/casting-project_casting.log 2>&1
+0 10 * * * cd /home/bold/dev/et-casting-scrappers/app && ./scripts/cron-with-heartbeat.sh project_casting_10 npm run start:project_casting >> /tmp/casting-project_casting.log 2>&1
 
 # Auditions Free — 18:00
-0 18 * * * cd /home/bold/dev/et-casting-scrappers/app && npm run start:auditions_free >> /tmp/casting-auditions_free.log 2>&1
+0 18 * * * cd /home/bold/dev/et-casting-scrappers/app && ./scripts/cron-with-heartbeat.sh auditions_free npm run start:auditions_free >> /tmp/casting-auditions_free.log 2>&1
 
 # All Castings — 18:00
-0 18 * * * cd /home/bold/dev/et-casting-scrappers/app && npm run start:all_castings >> /tmp/casting-all_castings.log 2>&1
+0 18 * * * cd /home/bold/dev/et-casting-scrappers/app && ./scripts/cron-with-heartbeat.sh all_castings npm run start:all_castings >> /tmp/casting-all_castings.log 2>&1
+
+# Meilisearch — every 10 minutes
+*/10 * * * * cd /home/bold/dev/et-casting-scrappers/app && ./scripts/cron-with-heartbeat.sh melisearch_projects npm run start:add_projects_to_melisearch >> /tmp/casting-melisearch.log 2>&1
 
 # Project markets — every 10 minutes
-*/10 * * * * cd /home/bold/dev/et-casting-scrappers/app && npm run update:project_markets >> /tmp/casting-project_markets.log 2>&1
+*/10 * * * * cd /home/bold/dev/et-casting-scrappers/app && ./scripts/cron-with-heartbeat.sh project_markets npm run update:project_markets >> /tmp/casting-project_markets.log 2>&1

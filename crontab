@@ -1,22 +1,18 @@
-# Project Casting Cron at 6PM every day
+# Job IDs must match trmx casting catalog (server/utils/castingCronCatalog.ts).
+# TRMX_CRON_HEARTBEAT_* / CRON_HEARTBEAT_SECRET: set in Coolify (see docker-entrypoint → /etc/cron-env.sh).
 
-0 18 * * * cd /app && npm run start:project_casting
+# Project casting — 10:00 and 18:00 PT (CRON_TZ in container)
+0 18 * * * cd /app && ./scripts/cron-with-heartbeat.sh project_casting_18 npm run start:project_casting
+0 10 * * * cd /app && ./scripts/cron-with-heartbeat.sh project_casting_10 npm run start:project_casting
 
-# Project Casting Cron at 10AM every day
-0 10 * * * cd /app && npm run start:project_casting
+# Auditions free — 18:00
+0 18 * * * cd /app && ./scripts/cron-with-heartbeat.sh auditions_free npm run start:auditions_free
 
-# Auditions Free Cron at 6PM every day
+# All castings — 18:00
+0 18 * * * cd /app && ./scripts/cron-with-heartbeat.sh all_castings npm run start:all_castings
 
-0 18 * * * cd /app && npm run start:auditions_free
+# Meilisearch — every 10 minutes
+*/10 * * * * cd /app && ./scripts/cron-with-heartbeat.sh melisearch_projects npm run start:add_projects_to_melisearch
 
-# All Castings Cron at 6PM every day
-
-0 18 * * * cd /app && npm run start:all_castings
-
-# Add Projects to Melisearch every 10 minutes
-
-*/10 * * * * cd /app && npm run start:add_projects_to_melisearch
-
-# Update project markets
-
-*/10 * * * * cd /app && npm run update:project_markets
+# Project markets — every 10 minutes
+*/10 * * * * cd /app && ./scripts/cron-with-heartbeat.sh project_markets npm run update:project_markets

@@ -47,6 +47,9 @@ RUN npm install -g tsx
 # Compile TypeScript
 RUN npx tsc
 
+# TRMX cron dashboard heartbeats (see app/scripts/cron-with-heartbeat.sh)
+RUN chmod +x /app/scripts/cron-with-heartbeat.sh
+
 # Install crontab file
 RUN crontab /etc/cron.d/crontab
 
