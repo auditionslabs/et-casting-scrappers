@@ -19,8 +19,8 @@ CRON_TZ=America/Los_Angeles
 PATH=/home/bold/.nvm/versions/node/v22.19.0/bin:/usr/bin:/bin
 HOME=/home/bold
 
-# TRMX cron dashboard — same values as TRMX server CRON_HEARTBEAT_SECRET; base URL = your Nuxt origin (no trailing slash)
-TRMX_CRON_HEARTBEAT_BASE_URL=https://trmx.example.com
+# TRMX cron dashboard — same values as TRMX server CRON_HEARTBEAT_SECRET; base URL = Nuxt origin (no trailing slash)
+TRMX_CRON_HEARTBEAT_BASE_URL=https://trmx.cc
 CRON_HEARTBEAT_SECRET=
 # Optional: heartbeat ping interval (seconds) for long jobs — leave empty to only send start/stop
 # TRMX_CRON_HEARTBEAT_PING_SEC=300
