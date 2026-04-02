@@ -32,6 +32,8 @@ ADD ./app /app
 # .env is not in repo - Coolify injects env vars at runtime; create empty placeholder
 RUN touch /app/.env
 ADD crontab /etc/cron.d/crontab
+ADD docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 # Install npm dependencies
 RUN npm install
@@ -48,5 +50,5 @@ RUN npx tsc
 # Install crontab file
 RUN crontab /etc/cron.d/crontab
 
-# Start cron service
-CMD ["cron", "-f"]
+# Health listener for Traefik (3000) + cron in foreground
+CMD ["/docker-entrypoint.sh"]
