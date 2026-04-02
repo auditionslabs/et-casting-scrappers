@@ -1,0 +1,33 @@
+# Local WSL/Linux crontab for et-casting-scrappers (no Meilisearch jobs).
+#
+# Crontab UI (see jobs + per-job logs in the web UI):
+#   1. Paste the variable block into "Environment Variables" (fix NVM path if your Node version differs).
+#   2. For each job below, click "New", set Name / Job command / schedule, then set log paths if the UI offers them
+#      so stdout/stderr match the >> file below (or rely on shell redirection — Crontab UI can still list jobs;
+#      tail /tmp/casting-*.log for full output).
+#   3. Click "Save to crontab" (or run `crontab-ui --autosave`).
+#
+# CLI: `crontab -e` and paste the variable block + jobs.
+#
+# Prereqs:
+#   cd app && npm install && npm run build
+#   npx playwright install chromium
+#   System libraries for Chromium (run once, needs sudo): ./scripts/install-playwright-system-deps.sh
+#   app/.env — DB + API keys (Meilisearch vars not required for this template).
+#
+CRON_TZ=America/Los_Angeles
+PATH=/home/bold/.nvm/versions/node/v22.19.0/bin:/usr/bin:/bin
+HOME=/home/bold
+
+# Project Casting — 10:00 and 18:00 (CRON_TZ)
+0 18 * * * cd /home/bold/dev/et-casting-scrappers/app && npm run start:project_casting >> /tmp/casting-project_casting.log 2>&1
+0 10 * * * cd /home/bold/dev/et-casting-scrappers/app && npm run start:project_casting >> /tmp/casting-project_casting.log 2>&1
+
+# Auditions Free — 18:00
+0 18 * * * cd /home/bold/dev/et-casting-scrappers/app && npm run start:auditions_free >> /tmp/casting-auditions_free.log 2>&1
+
+# All Castings — 18:00
+0 18 * * * cd /home/bold/dev/et-casting-scrappers/app && npm run start:all_castings >> /tmp/casting-all_castings.log 2>&1
+
+# Project markets — every 10 minutes
+*/10 * * * * cd /home/bold/dev/et-casting-scrappers/app && npm run update:project_markets >> /tmp/casting-project_markets.log 2>&1
